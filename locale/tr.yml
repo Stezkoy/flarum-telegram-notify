@@ -1,0 +1,14 @@
+stezkoy-noui-tele-notify:
+  forum:
+    new_discussion: |
+      🆕 <b>Yeni konu:</b> <a href="{url}">«{title}»</a>
+      <b>Etiketler:</b> {tags}
+      <b>Yazar:</b> {author}
+      {excerpt}
+      ➡️ <a href="{url}">Konuya git</a>
+
+    new_post: |
+      💬 <b>Konuda yeni mesaj:</b> <a href="{url}">«{title}»</a>
+      <b>Yazar:</b> {author}
+      {excerpt}
+      ➡️ <a href="{url}">Mesaja git</a>

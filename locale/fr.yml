@@ -1,0 +1,14 @@
+stezkoy-noui-tele-notify:
+  forum:
+    new_discussion: |
+      🆕 <b>Nouveau sujet:</b> <a href="{url}">«{title}»</a>
+      <b>Tags:</b> {tags}
+      <b>Auteur:</b> {author}
+      {excerpt}
+      ➡️ <a href="{url}">Voir le sujet</a>
+
+    new_post: |
+      💬 <b>Nouveau message dans le sujet:</b> <a href="{url}">«{title}»</a>
+      <b>Auteur:</b> {author}
+      {excerpt}
+      ➡️ <a href="{url}">Voir le message</a>

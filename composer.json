@@ -1,0 +1,38 @@
+{
+  "name": "stezkoy/noui-tele-notify",
+  "type": "flarum-extension",
+  "description": "Send Telegram notifications about new discussions and posts from Flarum",
+  "version": "1.0.9",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Stezkoy",
+      "email": "stezko@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/stezkoy/noui-tele-notify",
+    "issues": "https://github.com/stezkoy/noui-tele-notify/issues"
+  },
+  "require": {
+    "flarum/core": "^2.0",
+    "php": "^8.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Stezkoy\\NouiTeleNotify\\": "src/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "NOUI Telegram Notify",
+      "category": "feature",
+      "icon": {
+        "name": "fab fa-telegram",
+        "backgroundColor": "#26A5E4",
+        "color": "#fff"
+      }
+    }
+  }
+}

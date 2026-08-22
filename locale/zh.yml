@@ -1,0 +1,14 @@
+stezkoy-noui-tele-notify:
+  forum:
+    new_discussion: |
+      🆕 <b>新主题：</b><a href="{url}">«{title}»</a>
+      <b>标签：</b>{tags}
+      <b>作者：</b>{author}
+      {excerpt}
+      ➡️ <a href="{url}">查看主题</a>
+
+    new_post: |
+      💬 <b>主题中的新帖子：</b><a href="{url}">«{title}»</a>
+      <b>作者：</b>{author}
+      {excerpt}
+      ➡️ <a href="{url}">查看帖子</a>
