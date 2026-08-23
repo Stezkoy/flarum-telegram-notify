@@ -15,6 +15,18 @@ const PLACEHOLDERS = [
   ['{tags}', 'ph_tags'],
 ];
 
+const HTML_TAGS = [
+  ['<b></b>', 'tag_bold'],
+  ['<i></i>', 'tag_italic'],
+  ['<u></u>', 'tag_underline'],
+  ['<s></s>', 'tag_strike'],
+  ['<a href=""></a>', 'tag_link'],
+  ['<code></code>', 'tag_code'],
+  ['<pre></pre>', 'tag_pre'],
+  ['<blockquote></blockquote>', 'tag_quote'],
+  ['<tg-spoiler></tg-spoiler>', 'tag_spoiler'],
+];
+
 const EXAMPLES = [
   ['ex_minimal', '{url}'],
   ['ex_compact', '🆕 <b>{title}</b>\n👤 {author}\n👉 {url}'],
@@ -62,14 +74,6 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         help: app.translator.trans(PREFIX + '.admin.chat_id_help'),
       }),
 
-      this.buildSettingComponent({
-        type: 'text',
-        setting: PREFIX + '.proxy',
-        placeholder: 'socks5://127.0.0.1:1080',
-        label: app.translator.trans(PREFIX + '.admin.proxy_label'),
-        help: app.translator.trans(PREFIX + '.admin.proxy_help'),
-      }),
-
       m('.Form-group', [
         m(
           Switch,
@@ -89,6 +93,28 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
             placeholder: '123',
             label: app.translator.trans(PREFIX + '.admin.topic_id_label'),
             help: app.translator.trans(PREFIX + '.admin.topic_id_help'),
+          })
+        : null,
+
+      m('.Form-group', [
+        m(
+          Switch,
+          {
+            state: this._useProxy(),
+            onchange: this._toggleProxy.bind(this),
+          },
+          app.translator.trans(PREFIX + '.admin.use_proxy_switch')
+        ),
+        m('p.helpText', app.translator.trans(PREFIX + '.admin.use_proxy_help')),
+      ]),
+
+      this._useProxy()
+        ? this.buildSettingComponent({
+            type: 'text',
+            setting: PREFIX + '.proxy',
+            placeholder: 'socks5://127.0.0.1:1080',
+            label: app.translator.trans(PREFIX + '.admin.proxy_label'),
+            help: app.translator.trans(PREFIX + '.admin.proxy_help'),
           })
         : null,
 
@@ -136,10 +162,17 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
           ])
         )
       ),
-      m('p', [
-        app.translator.trans(PREFIX + '.admin.html_hint') + ' ',
-        m('code', '<b> <i> <u> <s> <a href=""> <code> <pre> <blockquote> <tg-spoiler>'),
-      ]),
+      m('h4', app.translator.trans(PREFIX + '.admin.html_hint')),
+      m(
+        'ul',
+        HTML_TAGS.map(([tag, key]) =>
+          m('li', [
+            m('code', tag),
+            ' — ',
+            app.translator.trans(PREFIX + '.admin.' + key),
+          ])
+        )
+      ),
       m('h4', app.translator.trans(PREFIX + '.admin.examples_heading')),
       m(
         'ul.TelegramNotifyAdmin-examples',
@@ -167,6 +200,16 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
 
   _toggleTopic(value) {
     this.setting(PREFIX + '.use_topic_id')(value ? '1' : '');
+
+    m.redraw();
+  }
+
+  _useProxy() {
+    return this.setting(PREFIX + '.use_proxy', '')() === '1';
+  }
+
+  _toggleProxy(value) {
+    this.setting(PREFIX + '.use_proxy')(value ? '1' : '');
 
     m.redraw();
   }

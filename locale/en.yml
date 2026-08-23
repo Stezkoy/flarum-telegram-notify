@@ -6,8 +6,10 @@ stezkoy-telegram-notify:
     bot_token_help: Get it from @BotFather on Telegram.
     chat_id_label: Chat ID
     chat_id_help: ID of the channel or group, e.g. -1001234567890 or @channelusername.
-    proxy_label: Proxy (optional)
-    proxy_help: Used when api.telegram.org is unreachable from your server. Formats socks5://host:port or http://host:port, auth via user:pass@host:port. Requires cURL.
+    proxy_label: Proxy address
+    proxy_help: Formats socks5://host:port or http://host:port, auth via user:pass@host:port. Requires cURL.
+    use_proxy_switch: Connect through a proxy
+    use_proxy_help: Enable if api.telegram.org is unreachable from your server directly.
     use_topic_switch: Send messages to a specific topic
     use_topic_help: Enable this for forum-style Telegram groups where messages are organized into topics.
     topic_id_label: Topic ID
@@ -29,3 +31,12 @@ stezkoy-telegram-notify:
     ph_url: Link to the discussion
     ph_tags: Tags separated by spaces (new discussions only)
     html_hint: Supported Telegram HTML tags
+    tag_bold: bold text
+    tag_italic: italic text
+    tag_underline: underlined text
+    tag_strike: strikethrough text
+    tag_link: link, {url} can be used in href
+    tag_code: monospaced text
+    tag_pre: code block
+    tag_quote: quoted block
+    tag_spoiler: hidden text (spoiler)

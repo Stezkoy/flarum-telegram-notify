@@ -109,13 +109,17 @@ class TelegramNotifier
      */
     private function request(string $url, string $body): array
     {
-        $proxy = trim((string) $this->settings->get('stezkoy-telegram-notify.proxy'));
+        $proxy = null;
+        if (in_array($this->settings->get('stezkoy-telegram-notify.use_proxy'), [true, '1', 1], true)) {
+            $raw = trim((string) $this->settings->get('stezkoy-telegram-notify.proxy'));
+            $proxy = $raw !== '' ? $raw : null;
+        }
 
         $lastError = null;
 
         for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; $attempt++) {
             $result = function_exists('curl_init')
-                ? $this->requestWithCurl($url, $body, $proxy !== '' ? $proxy : null)
+                ? $this->requestWithCurl($url, $body, $proxy)
                 : $this->requestWithStreams($url, $body);
 
             if ($result['error'] === null) {

@@ -6,8 +6,10 @@ stezkoy-telegram-notify:
     bot_token_help: Получите у @BotFather в Telegram.
     chat_id_label: ID чата
     chat_id_help: ID канала или группы, например -1001234567890 или @channelusername.
-    proxy_label: Прокси (необязательно)
-    proxy_help: Если api.telegram.org недоступен с вашего сервера. Форматы socks5://host:port или http://host:port, авторизация через user:pass@host:port. Требуется cURL.
+    proxy_label: Адрес прокси
+    proxy_help: Форматы socks5://host:port или http://host:port, авторизация через user:pass@host:port. Требуется cURL.
+    use_proxy_switch: Подключаться через прокси
+    use_proxy_help: Включите, если api.telegram.org недоступен с сервера напрямую.
     use_topic_switch: Отправлять сообщения в конкретный топик
     use_topic_help: Включите для Telegram-групп с форумами, где сообщения распределены по топикам.
     topic_id_label: ID топика
@@ -29,3 +31,12 @@ stezkoy-telegram-notify:
     ph_url: Ссылка на тему
     ph_tags: Теги через пробел (только для новых тем)
     html_hint: Поддерживаемые HTML-теги Telegram
+    tag_bold: жирный текст
+    tag_italic: курсив
+    tag_underline: подчёркнутый текст
+    tag_strike: зачёркнутый текст
+    tag_link: ссылка, в href можно подставить {url}
+    tag_code: моноширинный текст
+    tag_pre: блок кода
+    tag_quote: цитата
+    tag_spoiler: скрытый текст (спойлер)
