@@ -32,7 +32,10 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
       '.ExtensionPage-settings',
       m(
         '.container',
-        m('.TelegramNotifyAdmin', [this._connectionSection(), this._templatesSection()])
+        m(
+          'form.TelegramNotifyAdmin',
+          [this._connectionSection(), this._templatesSection()]
+        )
       )
     );
   }
@@ -45,6 +48,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
       this.buildSettingComponent({
         type: 'password',
         setting: PREFIX + '.bot_token',
+        placeholder: '1234567890:AAF3cBd4Ee5Ff6Gg7Hh8Ii9Jj0Kk1Ll',
         label: app.translator.trans(PREFIX + '.admin.bot_token_label'),
         help: app.translator.trans(PREFIX + '.admin.bot_token_help'),
       }),
@@ -52,6 +56,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
       this.buildSettingComponent({
         type: 'text',
         setting: PREFIX + '.chat_id',
+        placeholder: '-1001234567890',
         label: app.translator.trans(PREFIX + '.admin.chat_id_label'),
         help: app.translator.trans(PREFIX + '.admin.chat_id_help'),
       }),
@@ -72,6 +77,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         ? this.buildSettingComponent({
             type: 'number',
             setting: PREFIX + '.topic_id',
+            placeholder: '123',
             label: app.translator.trans(PREFIX + '.admin.topic_id_label'),
             help: app.translator.trans(PREFIX + '.admin.topic_id_help'),
           })
@@ -89,17 +95,17 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
       this.buildSettingComponent({
         type: 'textarea',
         setting: PREFIX + '.new_discussion_template',
-        label: app.translator.trans(PREFIX + '.admin.new_discussion_label'),
         rows: 7,
         placeholder: DEFAULT_DISCUSSION_TEMPLATE,
+        label: app.translator.trans(PREFIX + '.admin.new_discussion_label'),
       }),
 
       this.buildSettingComponent({
         type: 'textarea',
         setting: PREFIX + '.new_post_template',
-        label: app.translator.trans(PREFIX + '.admin.new_post_label'),
         rows: 7,
         placeholder: DEFAULT_POST_TEMPLATE,
+        label: app.translator.trans(PREFIX + '.admin.new_post_label'),
       }),
 
       this._hintsBox(),
@@ -127,12 +133,11 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
       ]),
       m('h4', app.translator.trans(PREFIX + '.admin.examples_heading')),
       m(
-        'ul',
+        'ul.TelegramNotifyAdmin-examples',
         EXAMPLES.map(([key, code]) =>
-          m('li.TelegramNotifyAdmin-example', [
+          m('li', [
             m('pre', code),
-            ' — ',
-            app.translator.trans(PREFIX + '.admin.' + key),
+            m('.TelegramNotifyAdmin-exampleNote', app.translator.trans(PREFIX + '.admin.' + key)),
           ])
         )
       ),
