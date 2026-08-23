@@ -10,6 +10,8 @@
 
 Sends a message to a Telegram channel or group when someone starts a discussion or posts a reply on your Flarum forum.
 
+![Extension settings](img/prew.png)
+
 ## Features
 
 - Notifications for new discussions and replies
