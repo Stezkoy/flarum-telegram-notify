@@ -3,7 +3,7 @@ import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import extractText from 'flarum/common/utils/extractText';
 
-const PREFIX = 'stezkoy-flarum-telegram-notify';
+const PREFIX = 'stezkoy-telegram-notify';
 
 const DEFAULT_DISCUSSION_TEMPLATE = '🆕 <b>{title}</b>\n👤 {author}\n{excerpt}\n👉 {url}';
 const DEFAULT_POST_TEMPLATE = '💬 <b>{title}</b>\n👤 {author}\n{excerpt}\n👉 {url}';

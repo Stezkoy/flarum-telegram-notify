@@ -65,7 +65,7 @@ class NewDiscussionListener
 
     private function template(): string
     {
-        $template = $this->settings->get('stezkoy-flarum-telegram-notify.new_discussion_template');
+        $template = $this->settings->get('stezkoy-telegram-notify.new_discussion_template');
 
         if (!is_string($template) || trim($template) === '') {
             return MessageTemplates::NEW_DISCUSSION;

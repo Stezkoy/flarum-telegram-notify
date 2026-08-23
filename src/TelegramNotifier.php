@@ -33,18 +33,18 @@ class TelegramNotifier
 
     private function configured(): bool
     {
-        return (string) $this->settings->get('stezkoy-flarum-telegram-notify.bot_token') !== ''
-            && (string) $this->settings->get('stezkoy-flarum-telegram-notify.chat_id') !== '';
+        return (string) $this->settings->get('stezkoy-telegram-notify.bot_token') !== ''
+            && (string) $this->settings->get('stezkoy-telegram-notify.chat_id') !== '';
     }
 
     public function send(string $message): array
     {
-        $botToken = (string) $this->settings->get('stezkoy-flarum-telegram-notify.bot_token');
-        $chatId = (string) $this->settings->get('stezkoy-flarum-telegram-notify.chat_id');
+        $botToken = (string) $this->settings->get('stezkoy-telegram-notify.bot_token');
+        $chatId = (string) $this->settings->get('stezkoy-telegram-notify.chat_id');
 
         $topicId = null;
-        if (in_array($this->settings->get('stezkoy-flarum-telegram-notify.use_topic_id'), [true, '1', 1], true)) {
-            $rawTopicId = $this->settings->get('stezkoy-flarum-telegram-notify.topic_id');
+        if (in_array($this->settings->get('stezkoy-telegram-notify.use_topic_id'), [true, '1', 1], true)) {
+            $rawTopicId = $this->settings->get('stezkoy-telegram-notify.topic_id');
             $topicId = ($rawTopicId !== null && $rawTopicId !== '') ? (int) $rawTopicId : null;
         }
 
@@ -110,8 +110,8 @@ class TelegramNotifier
     private function request(string $url, string $body): array
     {
         $proxy = null;
-        if (in_array($this->settings->get('stezkoy-flarum-telegram-notify.use_proxy'), [true, '1', 1], true)) {
-            $raw = trim((string) $this->settings->get('stezkoy-flarum-telegram-notify.proxy'));
+        if (in_array($this->settings->get('stezkoy-telegram-notify.use_proxy'), [true, '1', 1], true)) {
+            $raw = trim((string) $this->settings->get('stezkoy-telegram-notify.proxy'));
             $proxy = $raw !== '' ? $raw : null;
         }
 

@@ -52,7 +52,7 @@ class NewPostListener
 
     private function template(): string
     {
-        $template = $this->settings->get('stezkoy-flarum-telegram-notify.new_post_template');
+        $template = $this->settings->get('stezkoy-telegram-notify.new_post_template');
 
         if (!is_string($template) || trim($template) === '') {
             return MessageTemplates::NEW_POST;

@@ -28,16 +28,16 @@ class TestMessageController implements RequestHandlerInterface
         $actor = RequestUtil::getActor($request);
         $actor->assertAdmin();
 
-        $template = (string) $this->settings->get('stezkoy-flarum-telegram-notify.new_post_template');
+        $template = (string) $this->settings->get('stezkoy-telegram-notify.new_post_template');
 
         if (trim($template) === '') {
             $template = MessageTemplates::NEW_POST;
         }
 
         $placeholders = [
-            '{title}' => TemplateRenderer::escape((string) $this->translator->trans('stezkoy-flarum-telegram-notify.admin.test_sample_title')),
+            '{title}' => TemplateRenderer::escape((string) $this->translator->trans('stezkoy-telegram-notify.admin.test_sample_title')),
             '{author}' => TemplateRenderer::escape($actor->display_name ?? $actor->username ?? 'Admin'),
-            '{excerpt}' => TemplateRenderer::escape((string) $this->translator->trans('stezkoy-flarum-telegram-notify.admin.test_sample_excerpt')),
+            '{excerpt}' => TemplateRenderer::escape((string) $this->translator->trans('stezkoy-telegram-notify.admin.test_sample_excerpt')),
             '{tags}' => '#test',
             '{url}' => $this->url->to('forum')->base(),
         ];
