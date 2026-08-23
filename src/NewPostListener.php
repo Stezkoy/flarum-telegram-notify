@@ -48,7 +48,7 @@ class NewPostListener
             [
                 '{title}' => TemplateRenderer::escape($title),
                 '{author}' => TemplateRenderer::escape($authorName),
-                '{excerpt}' => '<i>' . TemplateRenderer::escape($excerpt) . '</i>',
+                '{excerpt}' => TemplateRenderer::escape($excerpt),
                 '{url}' => $discussionUrl,
             ]
         );

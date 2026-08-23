@@ -98,6 +98,24 @@ php flarum cache:clear
 {url}
 ```
 
+**Заголовок-ссылка**
+
+```text
+🆕 <a href="{url}"><b>{title}</b></a>
+👤 {author}
+{excerpt}
+```
+
+**Ссылка с надписью** — вместо голого URL
+
+```text
+💬 <b>{title}</b>
+👤 {author}
+{excerpt}
+
+👉 <a href="{url}">Перейти в тему</a>
+```
+
 ## Требования
 
 - PHP ^8.3

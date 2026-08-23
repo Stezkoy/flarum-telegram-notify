@@ -1,5 +1,6 @@
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import Switch from 'flarum/common/components/Switch';
+import extractText from 'flarum/common/utils/extractText';
 
 const PREFIX = 'stezkoy-telegram-notify';
 
@@ -134,7 +135,15 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
       m('h4', app.translator.trans(PREFIX + '.admin.examples_heading')),
       m(
         'ul.TelegramNotifyAdmin-examples',
-        EXAMPLES.map(([key, code]) =>
+        [
+          ...EXAMPLES,
+          [
+            'ex_button',
+            `💬 <b>{title}</b>\n👤 {author}\n{excerpt}\n\n👉 <a href="{url}">${extractText(
+              app.translator.trans(PREFIX + '.admin.ex_link_word')
+            )}</a>`,
+          ],
+        ].map(([key, code]) =>
           m('li', [
             m('pre', code),
             m('.TelegramNotifyAdmin-exampleNote', app.translator.trans(PREFIX + '.admin.' + key)),

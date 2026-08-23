@@ -19,6 +19,8 @@ stezkoy-telegram-notify:
     ex_minimal: только ссылка
     ex_compact: компактное сообщение
     ex_full: полная карточка с тегами и отрывком
+    ex_button: ссылка с надписью вместо голого URL
+    ex_link_word: Перейти в тему
     ph_title: Заголовок темы
     ph_author: Имя автора
     ph_excerpt: Первые ~200 символов текста сообщения

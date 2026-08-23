@@ -98,6 +98,24 @@ Telegram HTML is supported: `<b> <i> <u> <s> <a href=""> <code> <pre> <blockquot
 {url}
 ```
 
+**Title as a link**
+
+```text
+🆕 <a href="{url}"><b>{title}</b></a>
+👤 {author}
+{excerpt}
+```
+
+**Labeled link** — instead of a raw URL
+
+```text
+💬 <b>{title}</b>
+👤 {author}
+{excerpt}
+
+👉 <a href="{url}">Go to topic</a>
+```
+
 ## Requirements
 
 - PHP ^8.3

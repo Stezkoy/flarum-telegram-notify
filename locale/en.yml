@@ -19,6 +19,8 @@ stezkoy-telegram-notify:
     ex_minimal: just the link
     ex_compact: compact message
     ex_full: full card with tags and excerpt
+    ex_button: labeled link instead of a raw URL
+    ex_link_word: Go to topic
     ph_title: Discussion title
     ph_author: Author name
     ph_excerpt: First ~200 characters of the post content

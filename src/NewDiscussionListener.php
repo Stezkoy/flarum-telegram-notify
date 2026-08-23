@@ -66,7 +66,7 @@ class NewDiscussionListener
                 '{title}' => TemplateRenderer::escape($title),
                 '{tags}' => TemplateRenderer::escape($tagsString),
                 '{author}' => TemplateRenderer::escape($authorName),
-                '{excerpt}' => '<i>' . TemplateRenderer::escape($excerpt) . '</i>',
+                '{excerpt}' => TemplateRenderer::escape($excerpt),
                 '{url}' => $discussionUrl,
             ]
         );
