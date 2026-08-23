@@ -1,14 +1,27 @@
-stezkoy-noui-tele-notify:
-  forum:
-    new_discussion: |
-      🆕 <b>New topic:</b> <a href="{url}">«{title}»</a>
-      <b>Tags:</b> {tags}
-      <b>Author:</b> {author}
-      {excerpt}
-      ➡️ <a href="{url}">Go to topic</a>
-
-    new_post: |
-      💬 <b>New post in topic:</b> <a href="{url}">«{title}»</a>
-      <b>Author:</b> {author}
-      {excerpt}
-      ➡️ <a href="{url}">Go to post</a>
+stezkoy-telegram-notify:
+  admin:
+    connection_heading: Connection
+    connection_intro: Credentials of the Telegram bot that will receive notifications.
+    bot_token_label: Bot token
+    bot_token_help: Get it from @BotFather on Telegram.
+    chat_id_label: Chat ID
+    chat_id_help: ID of the channel or group, e.g. -1001234567890 or @channelusername.
+    use_topic_switch: Send messages to a specific topic
+    use_topic_help: Enable this for forum-style Telegram groups where messages are organized into topics.
+    topic_id_label: Topic ID
+    topic_id_help: Numeric ID of the topic (message_thread_id) in the group.
+    templates_heading: Message templates
+    templates_intro: Customize how notifications look in Telegram. Telegram HTML formatting is supported.
+    new_discussion_label: New discussion template
+    new_post_label: New post template
+    placeholders_heading: Available placeholders
+    examples_heading: Examples
+    ex_minimal: just the link
+    ex_compact: compact message
+    ex_full: full card with tags and excerpt
+    ph_title: Discussion title
+    ph_author: Author name
+    ph_excerpt: First ~200 characters of the post content
+    ph_url: Link to the discussion
+    ph_tags: Tags separated by spaces (new discussions only)
+    html_hint: Supported Telegram HTML tags

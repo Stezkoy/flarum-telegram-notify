@@ -1,14 +1,27 @@
-stezkoy-noui-tele-notify:
-  forum:
-    new_discussion: |
-      🆕 <b>Новая тема:</b> <a href="{url}">«{title}»</a>
-      <b>Теги:</b> {tags}
-      <b>Автор:</b> {author}
-      {excerpt}
-      ➡️ <a href="{url}">Перейти к теме</a>
-
-    new_post: |
-      💬 <b>Новое сообщение в теме:</b> <a href="{url}">«{title}»</a>
-      <b>Автор:</b> {author}
-      {excerpt}
-      ➡️ <a href="{url}">Перейти к сообщению</a>
+stezkoy-telegram-notify:
+  admin:
+    connection_heading: Подключение
+    connection_intro: Данные Telegram-бота, который будет получать уведомления.
+    bot_token_label: Токен бота
+    bot_token_help: Получите у @BotFather в Telegram.
+    chat_id_label: ID чата
+    chat_id_help: ID канала или группы, например -1001234567890 или @channelusername.
+    use_topic_switch: Отправлять сообщения в конкретный топик
+    use_topic_help: Включите для Telegram-групп с форумами, где сообщения распределены по топикам.
+    topic_id_label: ID топика
+    topic_id_help: Числовой идентификатор топика (message_thread_id) в группе.
+    templates_heading: Шаблоны сообщений
+    templates_intro: Настройте, как будут выглядеть уведомления в Telegram. Поддерживается HTML-форматирование Telegram.
+    new_discussion_label: Шаблон для новой темы
+    new_post_label: Шаблон для нового сообщения
+    placeholders_heading: Доступные подстановки
+    examples_heading: Примеры
+    ex_minimal: только ссылка
+    ex_compact: компактное сообщение
+    ex_full: полная карточка с тегами и отрывком
+    ph_title: Заголовок темы
+    ph_author: Имя автора
+    ph_excerpt: Первые ~200 символов текста сообщения
+    ph_url: Ссылка на тему
+    ph_tags: Теги через пробел (только для новых тем)
+    html_hint: Поддерживаемые HTML-теги Telegram

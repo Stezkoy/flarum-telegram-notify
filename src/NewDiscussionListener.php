@@ -1,17 +1,17 @@
 <?php
 
-namespace Stezkoy\NouiTeleNotify;
+namespace Stezkoy\TelegramNotify;
 
 use Flarum\Discussion\Event\Started;
 use Flarum\Http\UrlGenerator;
-use Flarum\Locale\Translator;
+use Flarum\Settings\SettingsRepositoryInterface;
 
 class NewDiscussionListener
 {
     public function __construct(
         private readonly TelegramNotifier $notifier,
         private readonly UrlGenerator $url,
-        private readonly Translator $translator,
+        private readonly SettingsRepositoryInterface $settings,
     ) {}
 
     public function handle(Started $event): void
@@ -60,19 +60,28 @@ class NewDiscussionListener
 
         $discussionUrl = $this->url->to('forum')->route('discussion', ['id' => $discussion->id]);
 
-        $message = $this->translator->trans('stezkoy-noui-tele-notify.forum.new_discussion', [
-            '{title}' => $this->escape($title),
-            '{tags}' => $this->escape($tagsString),
-            '{author}' => $this->escape($authorName),
-            '{excerpt}' => '<i>' . $this->escape($excerpt) . '</i>',
-            '{url}' => $discussionUrl,
-        ]);
+        $message = TemplateRenderer::render(
+            $this->template(),
+            [
+                '{title}' => TemplateRenderer::escape($title),
+                '{tags}' => TemplateRenderer::escape($tagsString),
+                '{author}' => TemplateRenderer::escape($authorName),
+                '{excerpt}' => '<i>' . TemplateRenderer::escape($excerpt) . '</i>',
+                '{url}' => $discussionUrl,
+            ]
+        );
 
-        $this->notifier->send($message);
+        $this->notifier->dispatch($message);
     }
 
-    private function escape(string $text): string
+    private function template(): string
     {
-        return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $template = $this->settings->get('stezkoy-telegram-notify.new_discussion_template');
+
+        if (!is_string($template) || trim($template) === '') {
+            return MessageTemplates::NEW_DISCUSSION;
+        }
+
+        return $template;
     }
 }
