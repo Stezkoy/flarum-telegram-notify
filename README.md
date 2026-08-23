@@ -32,6 +32,7 @@ php flarum cache:clear
 | -------------- | -------------------------------------------------- |
 | Bot token      | Token from @BotFather                              |
 | Chat ID        | `-1001234567890` for groups/channels, `@username` for public channels |
+| Proxy          | Optional — if `api.telegram.org` is unreachable from your server |
 | Topic switch   | Enable to send messages into a specific group topic |
 
 Messages are sent through the Flarum queue: with the default `sync` driver they go out immediately, with the `database` driver — in the background.

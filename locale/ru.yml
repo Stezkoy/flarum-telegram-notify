@@ -6,6 +6,8 @@ stezkoy-telegram-notify:
     bot_token_help: Получите у @BotFather в Telegram.
     chat_id_label: ID чата
     chat_id_help: ID канала или группы, например -1001234567890 или @channelusername.
+    proxy_label: Прокси (необязательно)
+    proxy_help: Если api.telegram.org недоступен с вашего сервера. Форматы socks5://host:port или http://host:port, авторизация через user:pass@host:port. Требуется cURL.
     use_topic_switch: Отправлять сообщения в конкретный топик
     use_topic_help: Включите для Telegram-групп с форумами, где сообщения распределены по топикам.
     topic_id_label: ID топика

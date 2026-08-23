@@ -62,6 +62,14 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         help: app.translator.trans(PREFIX + '.admin.chat_id_help'),
       }),
 
+      this.buildSettingComponent({
+        type: 'text',
+        setting: PREFIX + '.proxy',
+        placeholder: 'socks5://127.0.0.1:1080',
+        label: app.translator.trans(PREFIX + '.admin.proxy_label'),
+        help: app.translator.trans(PREFIX + '.admin.proxy_help'),
+      }),
+
       m('.Form-group', [
         m(
           Switch,

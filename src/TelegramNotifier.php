@@ -10,9 +10,11 @@ class TelegramNotifier
 {
     private const API_BASE_URL = 'https://api.telegram.org/bot';
 
-    private const CONNECT_TIMEOUT_MS = 2000;
+    private const CONNECT_TIMEOUT_MS = 5000;
 
-    private const TOTAL_TIMEOUT_MS = 5000;
+    private const TOTAL_TIMEOUT_MS = 10000;
+
+    private const MAX_ATTEMPTS = 2;
 
     public function __construct(
         private readonly SettingsRepositoryInterface $settings,
@@ -107,17 +109,29 @@ class TelegramNotifier
      */
     private function request(string $url, string $body): array
     {
-        if (function_exists('curl_init')) {
-            return $this->requestWithCurl($url, $body);
+        $proxy = trim((string) $this->settings->get('stezkoy-telegram-notify.proxy'));
+
+        $lastError = null;
+
+        for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; $attempt++) {
+            $result = function_exists('curl_init')
+                ? $this->requestWithCurl($url, $body, $proxy !== '' ? $proxy : null)
+                : $this->requestWithStreams($url, $body);
+
+            if ($result['error'] === null) {
+                return $result;
+            }
+
+            $lastError = $result['error'];
         }
 
-        return $this->requestWithStreams($url, $body);
+        return ['response' => null, 'error' => $lastError];
     }
 
     /**
      * @return array{response: ?string, error: ?string}
      */
-    private function requestWithCurl(string $url, string $body): array
+    private function requestWithCurl(string $url, string $body, ?string $proxy): array
     {
         $ch = curl_init($url);
 
@@ -129,6 +143,10 @@ class TelegramNotifier
             CURLOPT_CONNECTTIMEOUT_MS => self::CONNECT_TIMEOUT_MS,
             CURLOPT_TIMEOUT_MS => self::TOTAL_TIMEOUT_MS,
         ]);
+
+        if ($proxy !== null) {
+            curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        }
 
         $response = curl_exec($ch);
 
