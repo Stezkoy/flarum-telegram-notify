@@ -1,6 +1,6 @@
 <?php
 
-namespace Stezkoy\TelegramNotify;
+namespace Stezkoy\FlarumTelegramNotify;
 
 final class MessageTemplates
 {

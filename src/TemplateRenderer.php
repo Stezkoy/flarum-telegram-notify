@@ -1,6 +1,6 @@
 <?php
 
-namespace Stezkoy\TelegramNotify;
+namespace Stezkoy\FlarumTelegramNotify;
 
 final class TemplateRenderer
 {
@@ -15,6 +15,28 @@ final class TemplateRenderer
     public static function escape(string $text): string
     {
         return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
+
+    /**
+     * Collapses whitespace, cuts to $length characters on a word boundary.
+     */
+    public static function excerpt(?string $text, int $length = 200): string
+    {
+        $text = strip_tags((string) $text);
+        $text = preg_replace('/\s+/u', ' ', trim($text)) ?? '';
+
+        if (mb_strlen($text) <= $length) {
+            return $text;
+        }
+
+        $cut = mb_substr($text, 0, $length);
+        $space = mb_strrpos($cut, ' ');
+
+        if ($space !== false && $space > (int) ($length * 0.6)) {
+            $cut = mb_substr($cut, 0, $space);
+        }
+
+        return $cut . '…';
     }
 
     /**

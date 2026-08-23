@@ -1,6 +1,6 @@
 <?php
 
-namespace Stezkoy\TelegramNotify;
+namespace Stezkoy\FlarumTelegramNotify;
 
 use Flarum\Discussion\Event\Started;
 use Flarum\Http\UrlGenerator;
@@ -39,13 +39,11 @@ class NewDiscussionListener
                 }
                 $content = implode(' ', $pieces);
             } else {
-                $content = strip_tags((string) $sourcePost->content);
+                $content = (string) $sourcePost->content;
             }
         }
-        $excerpt = mb_substr($content, 0, 200);
-        if (mb_strlen($content) > 200) {
-            $excerpt .= '…';
-        }
+
+        $excerpt = TemplateRenderer::excerpt($content);
 
         $tagsString = TemplateRenderer::discussionTags($discussion);
 
@@ -67,7 +65,7 @@ class NewDiscussionListener
 
     private function template(): string
     {
-        $template = $this->settings->get('stezkoy-telegram-notify.new_discussion_template');
+        $template = $this->settings->get('stezkoy-flarum-telegram-notify.new_discussion_template');
 
         if (!is_string($template) || trim($template) === '') {
             return MessageTemplates::NEW_DISCUSSION;

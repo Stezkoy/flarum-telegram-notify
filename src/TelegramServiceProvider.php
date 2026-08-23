@@ -1,6 +1,6 @@
 <?php
 
-namespace Stezkoy\TelegramNotify;
+namespace Stezkoy\FlarumTelegramNotify;
 
 use Flarum\Foundation\AbstractServiceProvider;
 

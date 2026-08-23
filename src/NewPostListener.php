@@ -1,6 +1,6 @@
 <?php
 
-namespace Stezkoy\TelegramNotify;
+namespace Stezkoy\FlarumTelegramNotify;
 
 use Flarum\Http\UrlGenerator;
 use Flarum\Post\Event\Posted;
@@ -32,14 +32,7 @@ class NewPostListener
         $user = $post->user;
         $authorName = $user?->display_name ?? 'Unknown';
 
-        $content = '';
-        if (!empty($post->content)) {
-            $content = strip_tags((string) $post->content);
-        }
-        $excerpt = mb_substr($content, 0, 200);
-        if (mb_strlen($content) > 200) {
-            $excerpt .= '…';
-        }
+        $excerpt = TemplateRenderer::excerpt($post->content);
 
         $discussionUrl = $this->url->to('forum')->route('discussion', ['id' => $discussion->id]);
 
@@ -59,7 +52,7 @@ class NewPostListener
 
     private function template(): string
     {
-        $template = $this->settings->get('stezkoy-telegram-notify.new_post_template');
+        $template = $this->settings->get('stezkoy-flarum-telegram-notify.new_post_template');
 
         if (!is_string($template) || trim($template) === '') {
             return MessageTemplates::NEW_POST;

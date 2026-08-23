@@ -1,6 +1,6 @@
 <?php
 
-namespace Stezkoy\TelegramNotify;
+namespace Stezkoy\FlarumTelegramNotify;
 
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Queue\Queue;
@@ -33,23 +33,23 @@ class TelegramNotifier
 
     private function configured(): bool
     {
-        return (string) $this->settings->get('stezkoy-telegram-notify.bot_token') !== ''
-            && (string) $this->settings->get('stezkoy-telegram-notify.chat_id') !== '';
+        return (string) $this->settings->get('stezkoy-flarum-telegram-notify.bot_token') !== ''
+            && (string) $this->settings->get('stezkoy-flarum-telegram-notify.chat_id') !== '';
     }
 
     public function send(string $message): array
     {
-        $botToken = (string) $this->settings->get('stezkoy-telegram-notify.bot_token');
-        $chatId = (string) $this->settings->get('stezkoy-telegram-notify.chat_id');
+        $botToken = (string) $this->settings->get('stezkoy-flarum-telegram-notify.bot_token');
+        $chatId = (string) $this->settings->get('stezkoy-flarum-telegram-notify.chat_id');
 
         $topicId = null;
-        if (in_array($this->settings->get('stezkoy-telegram-notify.use_topic_id'), [true, '1', 1], true)) {
-            $rawTopicId = $this->settings->get('stezkoy-telegram-notify.topic_id');
+        if (in_array($this->settings->get('stezkoy-flarum-telegram-notify.use_topic_id'), [true, '1', 1], true)) {
+            $rawTopicId = $this->settings->get('stezkoy-flarum-telegram-notify.topic_id');
             $topicId = ($rawTopicId !== null && $rawTopicId !== '') ? (int) $rawTopicId : null;
         }
 
         if ($botToken === '' || $chatId === '') {
-            $this->logger->warning('[stezkoy/telegram-notify] Extension is not configured: bot_token or chat_id missing.');
+            $this->logger->warning('[stezkoy/flarum-telegram-notify] Extension is not configured: bot_token or chat_id missing.');
 
             return [
                 'success' => false,
@@ -80,7 +80,7 @@ class TelegramNotifier
         $result = $this->request(self::API_BASE_URL . $botToken . '/sendMessage', $body);
 
         if ($result['error'] !== null) {
-            $this->logger->error('[stezkoy/telegram-notify] Request failed: ' . $result['error']);
+            $this->logger->error('[stezkoy/flarum-telegram-notify] Request failed: ' . $result['error']);
 
             return [
                 'success' => false,
@@ -93,7 +93,7 @@ class TelegramNotifier
         if (!is_array($decoded) || !($decoded['ok'] ?? false)) {
             $description = $decoded['description'] ?? 'Unknown Telegram API error';
 
-            $this->logger->warning('[stezkoy/telegram-notify] Telegram API error: ' . $description);
+            $this->logger->warning('[stezkoy/flarum-telegram-notify] Telegram API error: ' . $description);
 
             return [
                 'success' => false,
@@ -110,8 +110,8 @@ class TelegramNotifier
     private function request(string $url, string $body): array
     {
         $proxy = null;
-        if (in_array($this->settings->get('stezkoy-telegram-notify.use_proxy'), [true, '1', 1], true)) {
-            $raw = trim((string) $this->settings->get('stezkoy-telegram-notify.proxy'));
+        if (in_array($this->settings->get('stezkoy-flarum-telegram-notify.use_proxy'), [true, '1', 1], true)) {
+            $raw = trim((string) $this->settings->get('stezkoy-flarum-telegram-notify.proxy'));
             $proxy = $raw !== '' ? $raw : null;
         }
 

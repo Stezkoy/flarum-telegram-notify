@@ -1,8 +1,8 @@
 {
-  "name": "stezkoy/telegram-notify",
+  "name": "stezkoy/flarum-telegram-notify",
   "type": "flarum-extension",
   "description": "Send Telegram notifications about new discussions and posts from Flarum",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "authors": [
     {
@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Stezkoy\\TelegramNotify\\": "src/"
+      "Stezkoy\\FlarumTelegramNotify\\": "src/"
     }
   },
   "extra": {

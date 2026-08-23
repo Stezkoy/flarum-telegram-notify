@@ -1,4 +1,4 @@
-stezkoy-telegram-notify:
+stezkoy-flarum-telegram-notify:
   admin:
     connection_heading: Connection
     connection_intro: Credentials of the Telegram bot that will receive notifications.
@@ -31,6 +31,11 @@ stezkoy-telegram-notify:
     ph_url: Link to the discussion
     ph_tags: Discussion tags separated by spaces
     html_hint: Supported Telegram HTML tags
+    test_button: Send test message
+    test_ok: Test message sent — check Telegram
+    test_failed: Failed to send the request
+    test_sample_title: Test topic
+    test_sample_excerpt: This is a sample excerpt to preview how your template looks in Telegram.
     tag_bold: bold text
     tag_italic: italic text
     tag_underline: underlined text

@@ -3,6 +3,8 @@
 ![Flarum](https://img.shields.io/badge/Flarum-%5E2.0-26A5E4)
 ![PHP](https://img.shields.io/badge/PHP-%5E8.3-777BB4)
 ![License](https://img.shields.io/badge/license-MIT-green)
+[![Latest Stable Version](https://img.shields.io/packagist/v/stezkoy/flarum-telegram-notify.svg)](https://packagist.org/packages/stezkoy/flarum-telegram-notify)
+[![Total Downloads](https://img.shields.io/packagist/dt/stezkoy/flarum-telegram-notify.svg)](https://packagist.org/packages/stezkoy/flarum-telegram-notify)
 
 [Русская версия](README_RU.md)
 
@@ -17,8 +19,18 @@ Sends a message to a Telegram channel or group when someone starts a discussion 
 
 ## Installation
 
+Until the package is published on Packagist, add the repository to your forum's `composer.json`:
+
+```json
+"repositories": [
+    { "type": "vcs", "url": "https://github.com/Stezkoy/flarum-telegram-notify" }
+]
+```
+
+Then:
+
 ```bash
-composer require stezkoy/telegram-notify
+composer require stezkoy/flarum-telegram-notify
 php flarum cache:clear
 ```
 
@@ -41,10 +53,10 @@ Messages are sent through the Flarum queue: with the default `sync` driver they 
 
 ```bash
 # enable
-php flarum extension:enable stezkoy-telegram-notify
+php flarum extension:enable stezkoy-flarum-telegram-notify
 
 # disable
-php flarum extension:disable stezkoy-telegram-notify
+php flarum extension:disable stezkoy-flarum-telegram-notify
 
 # apply changes
 php flarum cache:clear

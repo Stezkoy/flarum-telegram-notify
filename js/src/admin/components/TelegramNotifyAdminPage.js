@@ -1,8 +1,9 @@
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
+import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import extractText from 'flarum/common/utils/extractText';
 
-const PREFIX = 'stezkoy-telegram-notify';
+const PREFIX = 'stezkoy-flarum-telegram-notify';
 
 const DEFAULT_DISCUSSION_TEMPLATE = '🆕 <b>{title}</b>\n👤 {author}\n{excerpt}\n👉 {url}';
 const DEFAULT_POST_TEMPLATE = '💬 <b>{title}</b>\n👤 {author}\n{excerpt}\n👉 {url}';
@@ -38,6 +39,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
     super.oninit(vnode);
 
     this.setting(PREFIX + '.use_topic_id', '');
+    this.testing = false;
   }
 
   content(vnode) {
@@ -118,6 +120,19 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
           })
         : null,
 
+      m('.Form-group.Form-controls', [
+        m(
+          Button,
+          {
+            className: 'Button',
+            icon: 'fas fa-paper-plane',
+            loading: this.testing,
+            onclick: this._sendTest.bind(this),
+          },
+          app.translator.trans(PREFIX + '.admin.test_button')
+        ),
+      ]),
+
       m('.Form-group.Form-controls', this.submitButton()),
     ]);
   }
@@ -196,6 +211,38 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
 
   _useTopic() {
     return this.setting(PREFIX + '.use_topic_id', '')() === '1';
+  }
+
+  _sendTest() {
+    if (this.testing) {
+      return;
+    }
+
+    this.testing = true;
+
+    app
+      .request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/telegram-notify/test',
+      })
+      .then(
+        (response) => {
+          this.testing = false;
+
+          if (response.success) {
+            app.alerts.show({ type: 'success' }, app.translator.trans(PREFIX + '.admin.test_ok'));
+          } else {
+            app.alerts.show({ type: 'error' }, response.error || app.translator.trans(PREFIX + '.admin.test_failed'));
+          }
+
+          m.redraw();
+        },
+        () => {
+          this.testing = false;
+          app.alerts.show({ type: 'error' }, app.translator.trans(PREFIX + '.admin.test_failed'));
+          m.redraw();
+        }
+      );
   }
 
   _toggleTopic(value) {

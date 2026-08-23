@@ -1,4 +1,4 @@
-stezkoy-telegram-notify:
+stezkoy-flarum-telegram-notify:
   admin:
     connection_heading: Подключение
     connection_intro: Данные Telegram-бота, который будет получать уведомления.
@@ -31,6 +31,11 @@ stezkoy-telegram-notify:
     ph_url: Ссылка на тему
     ph_tags: Теги темы через пробел
     html_hint: Поддерживаемые HTML-теги Telegram
+    test_button: Отправить тестовое сообщение
+    test_ok: Тестовое сообщение отправлено, проверьте Telegram
+    test_failed: Не удалось отправить запрос
+    test_sample_title: Тестовая тема
+    test_sample_excerpt: Это пример отрывка, чтобы проверить, как ваш шаблон выглядит в Telegram.
     tag_bold: жирный текст
     tag_italic: курсив
     tag_underline: подчёркнутый текст
