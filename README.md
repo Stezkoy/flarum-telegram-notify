@@ -60,7 +60,7 @@ Two textareas define how notifications look: one for new discussions, one for re
 | `{author}`   | Author name                            |
 | `{excerpt}`  | First ~200 characters of the post text |
 | `{url}`      | Link to the discussion                 |
-| `{tags}`     | Tags separated by spaces               |
+| `{tags}`     | Discussion tags separated by spaces    |
 
 Telegram HTML is supported.
 

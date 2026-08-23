@@ -29,7 +29,7 @@ stezkoy-telegram-notify:
     ph_author: Author name
     ph_excerpt: First ~200 characters of the post content
     ph_url: Link to the discussion
-    ph_tags: Tags separated by spaces (new discussions only)
+    ph_tags: Discussion tags separated by spaces
     html_hint: Supported Telegram HTML tags
     tag_bold: bold text
     tag_italic: italic text

@@ -47,16 +47,7 @@ class NewDiscussionListener
             $excerpt .= '…';
         }
 
-        $tagsString = '';
-        try {
-            $tags = $discussion->tags;
-            if ($tags !== null && $tags->isNotEmpty()) {
-                $tagNames = $tags->pluck('name')->map(fn($name) => '#' . $name);
-                $tagsString = $tagNames->implode(' ');
-            }
-        } catch (\Throwable $e) {
-            // tags extension not available
-        }
+        $tagsString = TemplateRenderer::discussionTags($discussion);
 
         $discussionUrl = $this->url->to('forum')->route('discussion', ['id' => $discussion->id]);
 

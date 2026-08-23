@@ -47,6 +47,7 @@ class NewPostListener
             $this->template(),
             [
                 '{title}' => TemplateRenderer::escape($title),
+                '{tags}' => TemplateRenderer::escape(TemplateRenderer::discussionTags($discussion)),
                 '{author}' => TemplateRenderer::escape($authorName),
                 '{excerpt}' => TemplateRenderer::escape($excerpt),
                 '{url}' => $discussionUrl,
