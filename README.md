@@ -36,6 +36,19 @@ php flarum cache:clear
 
 Messages are sent through the Flarum queue: with the default `sync` driver they go out immediately, with the `database` driver — in the background.
 
+## Enable / disable via terminal
+
+```bash
+# enable
+php flarum extension:enable stezkoy-telegram-notify
+
+# disable
+php flarum extension:disable stezkoy-telegram-notify
+
+# apply changes
+php flarum cache:clear
+```
+
 ## Message templates
 
 Two textareas define how notifications look: one for new discussions, one for replies.

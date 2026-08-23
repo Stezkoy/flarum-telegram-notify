@@ -36,6 +36,19 @@ php flarum cache:clear
 
 Отправка идёт через очередь Flarum: с драйвером по умолчанию `sync` сообщения уходят сразу, с драйвером `database` — в фоне.
 
+## Включение / отключение через терминал
+
+```bash
+# включить
+php flarum extension:enable stezkoy-telegram-notify
+
+# выключить
+php flarum extension:disable stezkoy-telegram-notify
+
+# применить изменения
+php flarum cache:clear
+```
+
 ## Шаблоны сообщений
 
 Два поля определяют вид уведомлений: для новых тем и для ответов.
