@@ -62,7 +62,19 @@ Two textareas define how notifications look: one for new discussions, one for re
 | `{url}`      | Link to the discussion                 |
 | `{tags}`     | Tags separated by spaces               |
 
-Telegram HTML is supported: `<b> <i> <u> <s> <a href=""> <code> <pre> <blockquote> <tg-spoiler>`.
+Telegram HTML is supported.
+
+| Tag                         | Effect                 |
+| --------------------------- | ---------------------- |
+| `<b></b>`                   | bold text              |
+| `<i></i>`                   | italic text            |
+| `<u></u>`                   | underlined text        |
+| `<s></s>`                   | strikethrough text     |
+| `<a href="{url}"></a>`      | link                   |
+| `<code></code>`             | monospaced text        |
+| `<pre></pre>`               | code block             |
+| `<blockquote></blockquote>` | quote                  |
+| `<tg-spoiler></tg-spoiler>` | hidden text (spoiler)  |
 
 ### Recipes
 
