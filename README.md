@@ -43,10 +43,10 @@ Messages are sent through the Flarum queue: with the default `sync` driver they 
 
 ```bash
 # enable
-php flarum extension:enable stezkoy-flarum-telegram-notify
+php flarum extension:enable stezkoy-telegram-notify
 
 # disable
-php flarum extension:disable stezkoy-flarum-telegram-notify
+php flarum extension:disable stezkoy-telegram-notify
 
 # apply changes
 php flarum cache:clear

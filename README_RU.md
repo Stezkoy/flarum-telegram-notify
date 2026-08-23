@@ -43,10 +43,10 @@ php flarum cache:clear
 
 ```bash
 # включить
-php flarum extension:enable stezkoy-flarum-telegram-notify
+php flarum extension:enable stezkoy-telegram-notify
 
 # выключить
-php flarum extension:disable stezkoy-flarum-telegram-notify
+php flarum extension:disable stezkoy-telegram-notify
 
 # применить изменения
 php flarum cache:clear
