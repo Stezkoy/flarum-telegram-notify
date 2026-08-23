@@ -1,8 +1,18 @@
 .TelegramNotifyAdmin {
+  display: block;
   max-width: 720px;
 
   h2 {
     margin: 0 0 4px;
+  }
+
+  // Uniform vertical rhythm between settings, independent of core .Form styles
+  .Form-group {
+    margin-bottom: 20px;
+  }
+
+  &-section .Form-group:last-child {
+    margin-bottom: 0;
   }
 
   > .helpText,
@@ -33,7 +43,7 @@
   }
 
   &-hints {
-    margin: 4px 0 8px;
+    margin: 4px 0 20px;
     padding: 12px 16px;
     background: var(--control-bg, rgba(0, 0, 0, 0.03));
     border-radius: 8px;
