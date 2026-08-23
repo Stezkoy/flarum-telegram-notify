@@ -19,16 +19,6 @@
 
 ## Установка
 
-Пока пакет не опубликован на Packagist, добавьте репозиторий в `composer.json` форума:
-
-```json
-"repositories": [
-    { "type": "vcs", "url": "https://github.com/Stezkoy/flarum-telegram-notify" }
-]
-```
-
-Затем:
-
 ```bash
 composer require stezkoy/flarum-telegram-notify
 php flarum cache:clear

@@ -19,16 +19,6 @@ Sends a message to a Telegram channel or group when someone starts a discussion 
 
 ## Installation
 
-Until the package is published on Packagist, add the repository to your forum's `composer.json`:
-
-```json
-"repositories": [
-    { "type": "vcs", "url": "https://github.com/Stezkoy/flarum-telegram-notify" }
-]
-```
-
-Then:
-
 ```bash
 composer require stezkoy/flarum-telegram-notify
 php flarum cache:clear
