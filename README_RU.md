@@ -10,7 +10,7 @@
 
 Отправляет сообщение в Telegram-канал или группу, когда на форуме Flarum появляется новая тема или ответ.
 
-![Настройки расширения](img/prew.png)
+![Extension settings](https://raw.githubusercontent.com/Stezkoy/flarum-telegram-notify/refs/heads/main/img/prew.png)
 
 ## Возможности
 
