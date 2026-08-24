@@ -110,7 +110,8 @@ Telegram HTML is supported.
 **Compact reply**
 
 ```text
-💬 <b>{title}</b> · 👤 {author}
+💬 <b>{title}</b>
+👤 {author}
 {excerpt}
 {url}
 ```
