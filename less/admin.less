@@ -27,7 +27,7 @@
   &-section {
     margin-bottom: 32px;
     padding-bottom: 24px;
-    border-bottom: 1px solid var(--control-bg, rgba(0, 0, 0, 0.06));
+    border-bottom: 1px solid var(--control-bg);
 
     &:last-child {
       margin-bottom: 0;
@@ -43,9 +43,9 @@
   }
 
   &-hints {
-    margin: 4px 0 20px;
+    margin: 4px 0 0;
     padding: 12px 16px;
-    background: var(--control-bg, rgba(0, 0, 0, 0.03));
+    background: var(--control-bg);
     border-radius: 8px;
 
     summary {
@@ -54,20 +54,12 @@
       font-weight: 600;
 
       &:hover {
-        color: var(--link-color, #26a5e4);
+        color: var(--link-color);
       }
 
       &::marker {
-        color: var(--muted-color, #888);
+        color: var(--muted-color);
       }
-    }
-
-    > summary {
-      margin-bottom: 12px;
-    }
-
-    &[open] summary {
-      margin-bottom: 0;
     }
 
     h4 {
@@ -94,7 +86,7 @@
     }
 
     code {
-      background: var(--body-bg, rgba(0, 0, 0, 0.05));
+      background: var(--body-bg);
       padding: 1px 5px;
       border-radius: 3px;
       font-size: 0.85rem;
@@ -116,7 +108,7 @@
       display: block;
       margin: 0;
       padding: 6px 10px;
-      background: var(--body-bg, rgba(0, 0, 0, 0.05));
+      background: var(--body-bg);
       border-radius: 4px;
       font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
       font-size: 0.8rem;
@@ -127,6 +119,6 @@
   &-exampleNote {
     margin-top: 2px;
     font-size: 0.85rem;
-    color: var(--muted-color, #888);
+    color: var(--muted-color);
   }
 }

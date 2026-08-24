@@ -49,7 +49,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         '.container',
         m(
           'form.TelegramNotifyAdmin',
-          [this._connectionSection(), this._templatesSection()]
+          [this._connectionSection(), this._templatesSection(), this._hintsSection()]
         )
       )
     );
@@ -158,9 +158,14 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         label: app.translator.trans(PREFIX + '.admin.new_post_label'),
       }),
 
-      this._hintsBox(),
-
       m('.Form-group.Form-controls', this.submitButton()),
+    ]);
+  }
+
+  _hintsSection() {
+    return m('section.TelegramNotifyAdmin-section', [
+      m('h2', app.translator.trans(PREFIX + '.admin.hints_heading')),
+      this._hintsBox(),
     ]);
   }
 
@@ -168,7 +173,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
     return m(
       'details.TelegramNotifyAdmin-hints',
       [
-        m('summary', app.translator.trans(PREFIX + '.admin.hints_toggle')),
+        m('summary', app.translator.trans(PREFIX + '.admin.hints_summary')),
         m('h4', app.translator.trans(PREFIX + '.admin.placeholders_heading')),
       m(
         'ul',
