@@ -110,7 +110,8 @@ php flarum cache:clear
 **Компактный ответ**
 
 ```text
-💬 <b>{title}</b> · 👤 {author}
+💬 <b>{title}</b>
+👤 {author}
 {excerpt}
 {url}
 ```
