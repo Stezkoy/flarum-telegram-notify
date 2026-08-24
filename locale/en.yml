@@ -31,6 +31,7 @@ stezkoy-telegram-notify:
     ph_url: Link to the discussion
     ph_tags: Discussion tags separated by spaces
     html_hint: Supported Telegram HTML tags
+    hints_toggle: Hints & examples
     test_button: Send test message
     test_ok: Test message sent — check Telegram
     test_failed: Failed to send the request

@@ -48,6 +48,28 @@
     background: var(--control-bg, rgba(0, 0, 0, 0.03));
     border-radius: 8px;
 
+    summary {
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+
+      &:hover {
+        color: var(--link-color, #26a5e4);
+      }
+
+      &::marker {
+        color: var(--muted-color, #888);
+      }
+    }
+
+    > summary {
+      margin-bottom: 12px;
+    }
+
+    &[open] summary {
+      margin-bottom: 0;
+    }
+
     h4 {
       margin: 12px 0 8px;
 

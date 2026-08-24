@@ -165,8 +165,11 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
   }
 
   _hintsBox() {
-    return m('.TelegramNotifyAdmin-hints', [
-      m('h4', app.translator.trans(PREFIX + '.admin.placeholders_heading')),
+    return m(
+      'details.TelegramNotifyAdmin-hints',
+      [
+        m('summary', app.translator.trans(PREFIX + '.admin.hints_toggle')),
+        m('h4', app.translator.trans(PREFIX + '.admin.placeholders_heading')),
       m(
         'ul',
         PLACEHOLDERS.map(([code, key]) =>
@@ -206,7 +209,8 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
           ])
         )
       ),
-    ]);
+      ]
+    );
   }
 
   _useTopic() {

@@ -31,6 +31,7 @@ stezkoy-telegram-notify:
     ph_url: Ссылка на тему
     ph_tags: Теги темы через пробел
     html_hint: Поддерживаемые HTML-теги Telegram
+    hints_toggle: Подсказки и примеры
     test_button: Отправить тестовое сообщение
     test_ok: Тестовое сообщение отправлено, проверьте Telegram
     test_failed: Не удалось отправить запрос
