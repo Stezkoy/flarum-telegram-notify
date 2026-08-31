@@ -39,8 +39,8 @@ stezkoy-telegram-notify:
     test_button: Отправить тестовое сообщение
     test_ok: Тестовое сообщение отправлено, проверьте Telegram
     test_failed: Не удалось отправить запрос
-    template_invalid_discussion: Шаблон новой темы содержит некорректный HTML: {error}
-    template_invalid_post: Шаблон нового сообщения содержит некорректный HTML: {error}
+    template_invalid_discussion: 'Шаблон новой темы содержит некорректный HTML: {error}'
+    template_invalid_post: 'Шаблон нового сообщения содержит некорректный HTML: {error}'
     template_mismatch: незакрыт <{open}> перед </{close}>
     template_unclosed: незакрытый тег <{tag}>
     test_sample_title: Тестовая тема
