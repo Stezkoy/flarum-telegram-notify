@@ -65,6 +65,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
     if (error) {
       e.preventDefault();
       app.alerts.show({ type: 'error' }, error);
+      m.redraw();
 
       return;
     }
