@@ -41,8 +41,8 @@ stezkoy-telegram-notify:
     test_failed: Failed to send the request
     template_invalid_discussion: 'New discussion template has invalid HTML: {error}'
     template_invalid_post: 'New post template has invalid HTML: {error}'
-    template_mismatch: unclosed <{open}> before </{close}>
-    template_unclosed: unclosed <{tag}> tag
+    template_mismatch: 'unclosed {open} before {close}'
+    template_unclosed: 'unclosed {tag} tag'
     test_sample_title: Test topic
     test_sample_excerpt: This is a sample excerpt to preview how your template looks in Telegram.
     tag_bold: bold text

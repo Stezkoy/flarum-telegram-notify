@@ -362,12 +362,12 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
 
     const discussionError = this._validateHtml(discussion);
     if (discussionError) {
-      return app.translator.trans(PREFIX + '.admin.template_invalid_discussion', { error: discussionError });
+      return app.translator.trans(PREFIX + '.admin.template_invalid_discussion', { error: discussionError }, true);
     }
 
     const postError = this._validateHtml(post);
     if (postError) {
-      return app.translator.trans(PREFIX + '.admin.template_invalid_post', { error: postError });
+      return app.translator.trans(PREFIX + '.admin.template_invalid_post', { error: postError }, true);
     }
 
     return null;
@@ -381,12 +381,18 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
     while ((match = tagRegex.exec(template)) !== null) {
       const full = match[0];
       const name = match[1].toLowerCase();
-      const attrs = match[2];
 
       if (full.startsWith('</')) {
         const open = stack.pop();
         if (open !== name) {
-          return app.translator.trans(PREFIX + '.admin.template_mismatch', { open: open || '?', close: name });
+          return app.translator.trans(
+            PREFIX + '.admin.template_mismatch',
+            {
+              open: open ? '<' + open + '>' : '?',
+              close: '<' + name + '>',
+            },
+            true
+          );
         }
       } else if (!full.endsWith('/>') && !VOID_TAGS.has(name)) {
         stack.push(name);
@@ -394,7 +400,13 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
     }
 
     if (stack.length > 0) {
-      return app.translator.trans(PREFIX + '.admin.template_unclosed', { tag: stack[stack.length - 1] });
+      return app.translator.trans(
+        PREFIX + '.admin.template_unclosed',
+        {
+          tag: '<' + stack[stack.length - 1] + '>',
+        },
+        true
+      );
     }
 
     return null;
