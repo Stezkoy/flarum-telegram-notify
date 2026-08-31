@@ -398,7 +398,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         stack.push(name);
 
         if (name === 'a' && !/\shref\s*=/i.test(match[2])) {
-          return app.translator.trans(PREFIX + '.admin.template_missing_href', {}, true);
+          return app.translator.trans(PREFIX + '.admin.template_missing_href', { tag: '<a>' }, true);
         }
       }
     }

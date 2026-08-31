@@ -43,7 +43,7 @@ stezkoy-telegram-notify:
     template_invalid_post: 'New post template has invalid HTML: {error}'
     template_mismatch: 'unclosed {open} before {close}'
     template_unclosed: 'unclosed {tag} tag'
-    template_missing_href: '<a> tag must contain an href attribute'
+    template_missing_href: '{tag} tag must contain an href attribute'
     test_sample_title: Test topic
     test_sample_excerpt: This is a sample excerpt to preview how your template looks in Telegram.
     tag_bold: bold text
