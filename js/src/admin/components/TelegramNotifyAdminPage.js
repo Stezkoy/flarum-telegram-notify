@@ -396,6 +396,10 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         }
       } else if (!full.endsWith('/>') && !VOID_TAGS.has(name)) {
         stack.push(name);
+
+        if (name === 'a' && !/\shref\s*=/i.test(match[2])) {
+          return app.translator.trans(PREFIX + '.admin.template_missing_href', {}, true);
+        }
       }
     }
 
