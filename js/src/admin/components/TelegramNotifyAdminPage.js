@@ -5,6 +5,23 @@ import extractText from 'flarum/common/utils/extractText';
 
 const PREFIX = 'stezkoy-telegram-notify';
 
+const VOID_TAGS = new Set([
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]);
+
 const DEFAULT_DISCUSSION_TEMPLATE = '🆕 <b>{title}</b>\n👤 {author}\n{excerpt}\n👉 {url}';
 const DEFAULT_POST_TEMPLATE = '💬 <b>{title}</b>\n👤 {author}\n{excerpt}\n👉 {url}';
 
@@ -40,6 +57,19 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
 
     this.setting(PREFIX + '.use_topic_id', '');
     this.testing = false;
+  }
+
+  onsubmit(e) {
+    const error = this._validateTemplates();
+
+    if (error) {
+      e.preventDefault();
+      app.alerts.show({ type: 'error' }, error);
+
+      return;
+    }
+
+    super.onsubmit(e);
   }
 
   content(vnode) {
@@ -119,6 +149,8 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
             help: app.translator.trans(PREFIX + '.admin.proxy_help'),
           })
         : null,
+
+      this._tagsGroup(),
 
       m('.Form-group.Form-controls', [
         m(
@@ -268,5 +300,102 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
     this.setting(PREFIX + '.use_proxy')(value ? '1' : '');
 
     m.redraw();
+  }
+
+  _tagsGroup() {
+    const selectedIds = this._selectedTagIds();
+    const allTags = app.store.all('tags');
+
+    return m('.Form-group', [
+      m('label', app.translator.trans(PREFIX + '.admin.enabled_tags_label')),
+      allTags.length === 0
+        ? m('p.helpText', app.translator.trans(PREFIX + '.admin.enabled_tags_empty'))
+        : m('.TelegramNotifyAdminTagList', [
+            allTags.map((tag) => {
+              const id = String(tag.id());
+              const checked = selectedIds.includes(id);
+
+              return m(
+                'button.TelegramNotifyAdminTag',
+                {
+                  type: 'button',
+                  className: checked ? 'selected' : '',
+                  onclick: () => this._toggleTag(id),
+                },
+                tag.name()
+              );
+            }),
+          ]),
+      m('p.helpText', app.translator.trans(PREFIX + '.admin.enabled_tags_help')),
+    ]);
+  }
+
+  _toggleTag(id) {
+    const selected = this._selectedTagIds();
+    const index = selected.indexOf(id);
+
+    if (index === -1) {
+      selected.push(id);
+    } else {
+      selected.splice(index, 1);
+    }
+
+    this.setting(PREFIX + '.enabled-tags')(JSON.stringify(selected));
+    m.redraw();
+  }
+
+  _selectedTagIds() {
+    let selected = [];
+    try {
+      selected = JSON.parse(this.setting(PREFIX + '.enabled-tags', '[]')() || '[]');
+    } catch (e) {
+      selected = [];
+    }
+
+    return selected.map(String);
+  }
+
+  _validateTemplates() {
+    const discussion = this.setting(PREFIX + '.new_discussion_template')();
+    const post = this.setting(PREFIX + '.new_post_template')();
+
+    const discussionError = this._validateHtml(discussion);
+    if (discussionError) {
+      return app.translator.trans(PREFIX + '.admin.template_invalid_discussion', { error: discussionError });
+    }
+
+    const postError = this._validateHtml(post);
+    if (postError) {
+      return app.translator.trans(PREFIX + '.admin.template_invalid_post', { error: postError });
+    }
+
+    return null;
+  }
+
+  _validateHtml(template) {
+    const stack = [];
+    const tagRegex = /<\/?([a-zA-Z][a-zA-Z0-9-]*)((?:"[^"]*"|'[^']*'|[^"'>])*)>/g;
+
+    let match;
+    while ((match = tagRegex.exec(template)) !== null) {
+      const full = match[0];
+      const name = match[1].toLowerCase();
+      const attrs = match[2];
+
+      if (full.startsWith('</')) {
+        const open = stack.pop();
+        if (open !== name) {
+          return app.translator.trans(PREFIX + '.admin.template_mismatch', { open: open || '?', close: name });
+        }
+      } else if (!full.endsWith('/>') && !VOID_TAGS.has(name)) {
+        stack.push(name);
+      }
+    }
+
+    if (stack.length > 0) {
+      return app.translator.trans(PREFIX + '.admin.template_unclosed', { tag: stack[stack.length - 1] });
+    }
+
+    return null;
   }
 }

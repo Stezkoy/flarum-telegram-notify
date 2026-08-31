@@ -14,6 +14,9 @@ stezkoy-telegram-notify:
     use_topic_help: Enable this for forum-style Telegram groups where messages are organized into topics.
     topic_id_label: Topic ID
     topic_id_help: Numeric ID of the topic (message_thread_id) in the group.
+    enabled_tags_label: Tags
+    enabled_tags_help: Only notify about discussions in the selected tags. Leave empty to notify everywhere.
+    enabled_tags_empty: The flarum-tags extension must be enabled to choose tags.
     templates_heading: Message templates
     templates_intro: Customize how notifications look in Telegram. Telegram HTML formatting is supported.
     new_discussion_label: New discussion template
@@ -36,6 +39,10 @@ stezkoy-telegram-notify:
     test_button: Send test message
     test_ok: Test message sent — check Telegram
     test_failed: Failed to send the request
+    template_invalid_discussion: New discussion template has invalid HTML: {error}
+    template_invalid_post: New post template has invalid HTML: {error}
+    template_mismatch: unclosed <{open}> before </{close}>
+    template_unclosed: unclosed <{tag}> tag
     test_sample_title: Test topic
     test_sample_excerpt: This is a sample excerpt to preview how your template looks in Telegram.
     tag_bold: bold text

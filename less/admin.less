@@ -121,4 +121,33 @@
     font-size: 0.85rem;
     color: var(--muted-color);
   }
+
+  &TagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &Tag {
+    display: inline-block;
+    border: 1px solid var(--control-bg);
+    background: var(--control-bg);
+    border-radius: var(--border-radius);
+    padding: 5px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--text-color);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+    &.selected {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: #fff;
+    }
+
+    &:hover {
+      border-color: var(--primary-color);
+    }
+  }
 }

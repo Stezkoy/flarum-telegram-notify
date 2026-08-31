@@ -25,7 +25,8 @@ return [
 
     (new Extend\Settings())
         ->default('stezkoy-telegram-notify.new_discussion_template', MessageTemplates::NEW_DISCUSSION)
-        ->default('stezkoy-telegram-notify.new_post_template', MessageTemplates::NEW_POST),
+        ->default('stezkoy-telegram-notify.new_post_template', MessageTemplates::NEW_POST)
+        ->default('stezkoy-telegram-notify.enabled-tags', '[]'),
 
     new Extend\Locales(__DIR__ . '/locale'),
 ];

@@ -5,6 +5,7 @@ namespace Stezkoy\FlarumTelegramNotify;
 use Flarum\Http\UrlGenerator;
 use Flarum\Post\Event\Posted;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Illuminate\Support\Arr;
 
 class NewPostListener
 {
@@ -24,6 +25,10 @@ class NewPostListener
         }
 
         if ($post->number === 1) {
+            return;
+        }
+
+        if (!$this->shouldNotify($discussion)) {
             return;
         }
 
@@ -48,6 +53,22 @@ class NewPostListener
         );
 
         $this->notifier->dispatch($message);
+    }
+
+    private function shouldNotify($discussion): bool
+    {
+        $enabledTagIds = json_decode(
+            (string) $this->settings->get('stezkoy-telegram-notify.enabled-tags', '[]'),
+            true
+        );
+
+        if (!is_array($enabledTagIds) || $enabledTagIds === [] || !method_exists($discussion, 'tags')) {
+            return true;
+        }
+
+        $tagIds = Arr::pluck($discussion->tags, 'id');
+
+        return array_intersect($enabledTagIds, $tagIds) !== [];
     }
 
     private function template(): string

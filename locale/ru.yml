@@ -14,6 +14,9 @@ stezkoy-telegram-notify:
     use_topic_help: Включите для Telegram-групп с форумами, где сообщения распределены по топикам.
     topic_id_label: ID топика
     topic_id_help: Числовой идентификатор топика (message_thread_id) в группе.
+    enabled_tags_label: Теги
+    enabled_tags_help: Уведомлять только о темах в выбранных тегах. Оставьте пустым, чтобы уведомлять обо всём.
+    enabled_tags_empty: Расширение flarum-tags должно быть включено, чтобы выбирать теги.
     templates_heading: Шаблоны сообщений
     templates_intro: Настройте, как будут выглядеть уведомления в Telegram. Поддерживается HTML-форматирование Telegram.
     new_discussion_label: Шаблон для новой темы
@@ -36,6 +39,10 @@ stezkoy-telegram-notify:
     test_button: Отправить тестовое сообщение
     test_ok: Тестовое сообщение отправлено, проверьте Telegram
     test_failed: Не удалось отправить запрос
+    template_invalid_discussion: Шаблон новой темы содержит некорректный HTML: {error}
+    template_invalid_post: Шаблон нового сообщения содержит некорректный HTML: {error}
+    template_mismatch: незакрыт <{open}> перед </{close}>
+    template_unclosed: незакрытый тег <{tag}>
     test_sample_title: Тестовая тема
     test_sample_excerpt: Это пример отрывка, чтобы проверить, как ваш шаблон выглядит в Telegram.
     tag_bold: жирный текст
