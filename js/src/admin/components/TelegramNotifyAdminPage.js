@@ -59,7 +59,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
     this.testing = false;
   }
 
-  onsubmit(e) {
+  saveSettings(e) {
     const error = this._validateTemplates();
 
     if (error) {
@@ -69,7 +69,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
       return;
     }
 
-    super.onsubmit(e);
+    super.saveSettings(e);
   }
 
   content(vnode) {

@@ -75,11 +75,16 @@ class NewDiscussionListener
             true
         );
 
-        if (!is_array($enabledTagIds) || $enabledTagIds === [] || !method_exists($discussion, 'tags')) {
+        if (!is_array($enabledTagIds) || $enabledTagIds === []) {
             return true;
         }
 
-        $tagIds = Arr::pluck($discussion->tags, 'id');
+        try {
+            $tagIds = Arr::pluck($discussion->tags, 'id');
+        } catch (\Throwable $e) {
+            // flarum-tags extension not available — no filtering
+            return true;
+        }
 
         return array_intersect($enabledTagIds, $tagIds) !== [];
     }
