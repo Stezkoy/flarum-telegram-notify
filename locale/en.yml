@@ -15,7 +15,7 @@ stezkoy-telegram-notify:
     topic_id_label: Topic ID
     topic_id_help: Numeric ID of the topic (message_thread_id) in the group.
     enabled_tags_label: Tags
-    enabled_tags_help: Only notify about discussions in the selected tags. Leave empty to notify everywhere.
+    enabled_tags_help: Only notify about new discussions and replies in the selected tags. Leave empty to notify about everything.
     enabled_tags_empty: The flarum-tags extension must be enabled to choose tags.
     templates_heading: Message templates
     templates_intro: Customize how notifications look in Telegram. Telegram HTML formatting is supported.
