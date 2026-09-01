@@ -12,7 +12,8 @@
   ],
   "support": {
     "source": "https://github.com/Stezkoy/flarum-telegram-notify",
-    "issues": "https://github.com/Stezkoy/flarum-telegram-notify/issues"
+    "issues": "https://github.com/Stezkoy/flarum-telegram-notify/issues",
+    "forum": "https://discuss.flarum.org/d/39788-telegram-notify-send-new-discussions-and-replies-to-telegram"
   },
   "require": {
     "flarum/core": "^2.0",
