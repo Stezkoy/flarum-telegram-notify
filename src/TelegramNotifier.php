@@ -4,15 +4,13 @@ namespace Stezkoy\FlarumTelegramNotify;
 
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Queue\Queue;
+use Illuminate\Http\Client\Factory as HttpClient;
+use Illuminate\Http\Client\RequestException;
 use Psr\Log\LoggerInterface;
 
 class TelegramNotifier
 {
     private const API_BASE_URL = 'https://api.telegram.org/bot';
-
-    private const CONNECT_TIMEOUT_MS = 5000;
-
-    private const TOTAL_TIMEOUT_MS = 10000;
 
     private const MAX_ATTEMPTS = 2;
 
@@ -20,6 +18,7 @@ class TelegramNotifier
         private readonly SettingsRepositoryInterface $settings,
         private readonly Queue $queue,
         private readonly LoggerInterface $logger,
+        private readonly HttpClient $http,
     ) {}
 
     public function dispatch(string $message): void
@@ -115,80 +114,35 @@ class TelegramNotifier
             $proxy = $raw !== '' ? $raw : null;
         }
 
+        $options = [
+            'connect_timeout' => 5,
+            'timeout' => 10,
+            'http_errors' => false,
+        ];
+        if ($proxy !== null) {
+            $options['proxy'] = $proxy;
+        }
+
         $lastError = null;
 
         for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; $attempt++) {
-            $result = function_exists('curl_init')
-                ? $this->requestWithCurl($url, $body, $proxy)
-                : $this->requestWithStreams($url, $body);
+            try {
+                $response = $this->http
+                    ->withHeaders(['Content-Type' => 'application/json'])
+                    ->withOptions($options)
+                    ->post($url, json_decode($body, true) ?? []);
 
-            if ($result['error'] === null) {
-                return $result;
+                if ($response->failed()) {
+                    $status = $response->status();
+                    $lastError = "Telegram API responded with HTTP {$status}";
+                } else {
+                    return ['response' => $response->body(), 'error' => null];
+                }
+            } catch (RequestException $e) {
+                $lastError = $e->getMessage();
             }
-
-            $lastError = $result['error'];
         }
 
         return ['response' => null, 'error' => $lastError];
-    }
-
-    /**
-     * @return array{response: ?string, error: ?string}
-     */
-    private function requestWithCurl(string $url, string $body, ?string $proxy): array
-    {
-        $ch = curl_init($url);
-
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_POSTFIELDS => $body,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT_MS => self::CONNECT_TIMEOUT_MS,
-            CURLOPT_TIMEOUT_MS => self::TOTAL_TIMEOUT_MS,
-        ]);
-
-        if ($proxy !== null) {
-            curl_setopt($ch, CURLOPT_PROXY, $proxy);
-        }
-
-        $response = curl_exec($ch);
-
-        if ($response === false) {
-            $error = curl_error($ch) ?: 'Failed to connect to Telegram API';
-            curl_close($ch);
-
-            return ['response' => null, 'error' => $error];
-        }
-
-        curl_close($ch);
-
-        return ['response' => is_string($response) ? $response : null, 'error' => null];
-    }
-
-    /**
-     * @return array{response: ?string, error: ?string}
-     */
-    private function requestWithStreams(string $url, string $body): array
-    {
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => "Content-Type: application/json\r\n",
-                'content' => $body,
-                'timeout' => (int) ceil(self::TOTAL_TIMEOUT_MS / 1000),
-                'ignore_errors' => true,
-            ],
-        ]);
-
-        $response = @file_get_contents($url, false, $context);
-
-        if ($response === false) {
-            $error = error_get_last()['message'] ?? 'Failed to connect to Telegram API';
-
-            return ['response' => null, 'error' => $error];
-        }
-
-        return ['response' => $response, 'error' => null];
     }
 }

@@ -9,5 +9,6 @@ class TelegramServiceProvider extends AbstractServiceProvider
     public function register(): void
     {
         $this->container->singleton(TelegramNotifier::class);
+        $this->container->singleton(TagFilter::class);
     }
 }

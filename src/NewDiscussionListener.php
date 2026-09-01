@@ -5,7 +5,6 @@ namespace Stezkoy\FlarumTelegramNotify;
 use Flarum\Discussion\Event\Started;
 use Flarum\Http\UrlGenerator;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Illuminate\Support\Arr;
 
 class NewDiscussionListener
 {
@@ -13,6 +12,7 @@ class NewDiscussionListener
         private readonly TelegramNotifier $notifier,
         private readonly UrlGenerator $url,
         private readonly SettingsRepositoryInterface $settings,
+        private readonly TagFilter $tagFilter,
     ) {}
 
     public function handle(Started $event): void
@@ -20,7 +20,7 @@ class NewDiscussionListener
         $discussion = $event->discussion;
         $post = $event->post;
 
-        if (!$this->shouldNotify($discussion)) {
+        if (!$this->tagFilter->shouldNotify($discussion)) {
             return;
         }
 
@@ -35,17 +35,7 @@ class NewDiscussionListener
             $sourcePost = $discussion->firstPost;
         }
         if ($sourcePost !== null && !empty($sourcePost->content)) {
-            if (is_array($sourcePost->content)) {
-                $pieces = [];
-                foreach ($sourcePost->content as $block) {
-                    if (is_array($block) && isset($block['text'])) {
-                        $pieces[] = $block['text'];
-                    }
-                }
-                $content = implode(' ', $pieces);
-            } else {
-                $content = (string) $sourcePost->content;
-            }
+            $content = (string) $sourcePost->content;
         }
 
         $excerpt = TemplateRenderer::excerpt($content);
@@ -61,32 +51,11 @@ class NewDiscussionListener
                 '{tags}' => TemplateRenderer::escape($tagsString),
                 '{author}' => TemplateRenderer::escape($authorName),
                 '{excerpt}' => TemplateRenderer::escape($excerpt),
-                '{url}' => $discussionUrl,
+                '{url}' => TemplateRenderer::escape($discussionUrl),
             ]
         );
 
         $this->notifier->dispatch($message);
-    }
-
-    private function shouldNotify($discussion): bool
-    {
-        $enabledTagIds = json_decode(
-            (string) $this->settings->get('stezkoy-telegram-notify.enabled_tags', '[]'),
-            true
-        );
-
-        if (!is_array($enabledTagIds) || $enabledTagIds === []) {
-            return true;
-        }
-
-        try {
-            $tagIds = Arr::pluck($discussion->tags, 'id');
-        } catch (\Throwable $e) {
-            // flarum-tags extension not available — no filtering
-            return true;
-        }
-
-        return array_intersect($enabledTagIds, $tagIds) !== [];
     }
 
     private function template(): string

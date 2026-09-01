@@ -5,7 +5,6 @@ namespace Stezkoy\FlarumTelegramNotify;
 use Flarum\Http\UrlGenerator;
 use Flarum\Post\Event\Posted;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Illuminate\Support\Arr;
 
 class NewPostListener
 {
@@ -13,6 +12,7 @@ class NewPostListener
         private readonly TelegramNotifier $notifier,
         private readonly UrlGenerator $url,
         private readonly SettingsRepositoryInterface $settings,
+        private readonly TagFilter $tagFilter,
     ) {}
 
     public function handle(Posted $event): void
@@ -28,7 +28,7 @@ class NewPostListener
             return;
         }
 
-        if (!$this->shouldNotify($discussion)) {
+        if (!$this->tagFilter->shouldNotify($discussion)) {
             return;
         }
 
@@ -48,32 +48,11 @@ class NewPostListener
                 '{tags}' => TemplateRenderer::escape(TemplateRenderer::discussionTags($discussion)),
                 '{author}' => TemplateRenderer::escape($authorName),
                 '{excerpt}' => TemplateRenderer::escape($excerpt),
-                '{url}' => $discussionUrl,
+                '{url}' => TemplateRenderer::escape($discussionUrl),
             ]
         );
 
         $this->notifier->dispatch($message);
-    }
-
-    private function shouldNotify($discussion): bool
-    {
-        $enabledTagIds = json_decode(
-            (string) $this->settings->get('stezkoy-telegram-notify.enabled_tags', '[]'),
-            true
-        );
-
-        if (!is_array($enabledTagIds) || $enabledTagIds === []) {
-            return true;
-        }
-
-        try {
-            $tagIds = Arr::pluck($discussion->tags, 'id');
-        } catch (\Throwable $e) {
-            // flarum-tags extension not available — no filtering
-            return true;
-        }
-
-        return array_intersect($enabledTagIds, $tagIds) !== [];
     }
 
     private function template(): string

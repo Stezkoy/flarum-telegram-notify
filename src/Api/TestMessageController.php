@@ -39,7 +39,7 @@ class TestMessageController implements RequestHandlerInterface
             '{author}' => TemplateRenderer::escape($actor->display_name ?? $actor->username ?? 'Admin'),
             '{excerpt}' => TemplateRenderer::escape((string) $this->translator->trans('stezkoy-telegram-notify.admin.test_sample_excerpt')),
             '{tags}' => '#test',
-            '{url}' => $this->url->to('forum')->base(),
+            '{url}' => TemplateRenderer::escape($this->url->to('forum')->base()),
         ];
 
         return new JsonResponse(
