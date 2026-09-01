@@ -2,6 +2,14 @@
 
 use Illuminate\Database\Schema\Builder;
 
+/*
+ * Data migration: renames (and moves) stored settings keys by touching the
+ * settings table directly. Flarum\Database\Migration has no dedicated
+ * settings-rename helper, and resolving SettingsRepositoryInterface here
+ * would require the container at migration time. Direct table access is
+ * intentional and matches how other Flarum extensions rename settings.
+ */
+
 return [
     'up' => function (Builder $schema) {
         $renames = [

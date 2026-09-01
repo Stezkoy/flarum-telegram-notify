@@ -42,20 +42,24 @@ final class TemplateRenderer
     /**
      * Returns the discussion tags as "#tag1 #tag2", or an empty string
      * when the tags extension is not available or the discussion has none.
+     *
+     * Note: the tags relation is already loaded by TagFilter (when tag
+     * filtering is active) and cached on the model by Eloquent, so calling
+     * this right after a filter check never issues a second query.
      */
     public static function discussionTags($discussion): string
     {
-        try {
-            $tags = $discussion->tags;
+        if (!class_exists('Flarum\Tags\Tag')) {
+            return '';
+        }
 
-            if ($tags !== null && $tags->isNotEmpty()) {
-                return $tags
-                    ->pluck('name')
-                    ->map(fn ($name) => '#' . $name)
-                    ->implode(' ');
-            }
-        } catch (\Throwable $e) {
-            // tags extension not available
+        $tags = $discussion->tags;
+
+        if ($tags !== null && $tags->isNotEmpty()) {
+            return $tags
+                ->pluck('name')
+                ->map(fn ($name) => '#' . $name)
+                ->implode(' ');
         }
 
         return '';

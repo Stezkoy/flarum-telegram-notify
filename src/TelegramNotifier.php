@@ -3,9 +3,10 @@
 namespace Stezkoy\FlarumTelegramNotify;
 
 use Flarum\Settings\SettingsRepositoryInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Queue\Queue;
-use Illuminate\Http\Client\Factory as HttpClient;
-use Illuminate\Http\Client\RequestException;
 use Psr\Log\LoggerInterface;
 
 class TelegramNotifier
@@ -18,8 +19,19 @@ class TelegramNotifier
         private readonly SettingsRepositoryInterface $settings,
         private readonly Queue $queue,
         private readonly LoggerInterface $logger,
-        private readonly HttpClient $http,
     ) {}
+
+    private ?ClientInterface $http = null;
+
+    public function setHttpClient(ClientInterface $http): void
+    {
+        $this->http = $http;
+    }
+
+    private function http(): ClientInterface
+    {
+        return $this->http ??= new Client();
+    }
 
     public function dispatch(string $message): void
     {
@@ -67,16 +79,14 @@ class TelegramNotifier
             $data['message_thread_id'] = $topicId;
         }
 
-        $body = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
-        if ($body === false) {
+        if (json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) === false) {
             return [
                 'success' => false,
                 'error' => 'Failed to encode message payload',
             ];
         }
 
-        $result = $this->request(self::API_BASE_URL . $botToken . '/sendMessage', $body);
+        $result = $this->request(self::API_BASE_URL . $botToken . '/sendMessage', $data);
 
         if ($result['error'] !== null) {
             $this->logger->error('[stezkoy/flarum-telegram-notify] Request failed: ' . $result['error']);
@@ -106,7 +116,7 @@ class TelegramNotifier
     /**
      * @return array{response: ?string, error: ?string}
      */
-    private function request(string $url, string $body): array
+    private function request(string $url, array $data): array
     {
         $proxy = null;
         if (in_array($this->settings->get('stezkoy-telegram-notify.use_proxy'), [true, '1', 1], true)) {
@@ -115,6 +125,7 @@ class TelegramNotifier
         }
 
         $options = [
+            'json' => $data,
             'connect_timeout' => 5,
             'timeout' => 10,
             'http_errors' => false,
@@ -127,22 +138,34 @@ class TelegramNotifier
 
         for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; $attempt++) {
             try {
-                $response = $this->http
-                    ->withHeaders(['Content-Type' => 'application/json'])
-                    ->withOptions($options)
-                    ->post($url, json_decode($body, true) ?? []);
+                $response = $this->http()->post($url, $options);
 
-                if ($response->failed()) {
-                    $status = $response->status();
-                    $lastError = "Telegram API responded with HTTP {$status}";
+                $status = $response->getStatusCode();
+
+                if ($status >= 400) {
+                    $lastError = $this->sanitize("Telegram API responded with HTTP {$status}", $url);
                 } else {
-                    return ['response' => $response->body(), 'error' => null];
+                    return ['response' => (string) $response->getBody(), 'error' => null];
                 }
-            } catch (RequestException $e) {
-                $lastError = $e->getMessage();
+            } catch (GuzzleException $e) {
+                $lastError = $this->sanitize($e->getMessage(), $url);
             }
         }
 
         return ['response' => null, 'error' => $lastError];
+    }
+
+    /**
+     * Removes the bot token segment from a message so the secret never reaches the logs.
+     */
+    private function sanitize(string $message, string $url): string
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+
+        if (is_string($path) && preg_match('#^/bot([^/]+)/#', $path, $matches)) {
+            $message = str_replace($matches[1], '***', $message);
+        }
+
+        return $message;
     }
 }

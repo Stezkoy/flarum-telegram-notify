@@ -5,6 +5,9 @@ import extractText from 'flarum/common/utils/extractText';
 
 const PREFIX = 'stezkoy-telegram-notify';
 
+const DEFAULT_ATTR_DISCUSSION = PREFIX + '.default_new_discussion_template';
+const DEFAULT_ATTR_POST = PREFIX + '.default_new_post_template';
+
 const VOID_TAGS = new Set([
   'area',
   'base',
@@ -21,9 +24,6 @@ const VOID_TAGS = new Set([
   'track',
   'wbr',
 ]);
-
-const DEFAULT_DISCUSSION_TEMPLATE = '🆕 <b>{title}</b>\n👤 {author}\n{excerpt}\n👉 {url}';
-const DEFAULT_POST_TEMPLATE = '💬 <b>{title}</b>\n👤 {author}\n{excerpt}\n👉 {url}';
 
 const PLACEHOLDERS = [
   ['{title}', 'ph_title'],
@@ -57,6 +57,9 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
 
     this.setting(PREFIX + '.use_topic', '');
     this.testing = false;
+
+    this.defaultDiscussionTemplate = app.forum.attribute(DEFAULT_ATTR_DISCUSSION);
+    this.defaultPostTemplate = app.forum.attribute(DEFAULT_ATTR_POST);
   }
 
   saveSettings(e) {
@@ -179,7 +182,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         type: 'textarea',
         setting: PREFIX + '.new_discussion_template',
         rows: 7,
-        placeholder: DEFAULT_DISCUSSION_TEMPLATE,
+        placeholder: this.defaultDiscussionTemplate,
         label: app.translator.trans(PREFIX + '.admin.new_discussion_label'),
       }),
 
@@ -187,7 +190,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         type: 'textarea',
         setting: PREFIX + '.new_post_template',
         rows: 7,
-        placeholder: DEFAULT_POST_TEMPLATE,
+        placeholder: this.defaultPostTemplate,
         label: app.translator.trans(PREFIX + '.admin.new_post_label'),
       }),
 
@@ -304,56 +307,19 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
   }
 
   _tagsGroup() {
-    const selectedIds = this._selectedTagIds();
-    const allTags = app.store.all('tags');
-
-    return m('.Form-group', [
-      m('label', app.translator.trans(PREFIX + '.admin.enabled_tags_label')),
-      allTags.length === 0
-        ? m('p.helpText', app.translator.trans(PREFIX + '.admin.enabled_tags_empty'))
-        : m('.TelegramNotifyAdminTagList', [
-            allTags.map((tag) => {
-              const id = String(tag.id());
-              const checked = selectedIds.includes(id);
-
-              return m(
-                'button.TelegramNotifyAdminTag',
-                {
-                  type: 'button',
-                  className: checked ? 'selected' : '',
-                  onclick: () => this._toggleTag(id),
-                },
-                tag.name()
-              );
-            }),
-          ]),
-      m('p.helpText', app.translator.trans(PREFIX + '.admin.enabled_tags_help')),
-    ]);
-  }
-
-  _toggleTag(id) {
-    const selected = this._selectedTagIds();
-    const index = selected.indexOf(id);
-
-    if (index === -1) {
-      selected.push(id);
-    } else {
-      selected.splice(index, 1);
+    if (!app.data.extensions['flarum-tags']) {
+      return m('.Form-group', [
+        m('label', app.translator.trans(PREFIX + '.admin.enabled_tags_label')),
+        m('p.helpText', app.translator.trans(PREFIX + '.admin.enabled_tags_empty')),
+      ]);
     }
 
-    this.setting(PREFIX + '.enabled_tags')(JSON.stringify(selected));
-    m.redraw();
-  }
-
-  _selectedTagIds() {
-    let selected = [];
-    try {
-      selected = JSON.parse(this.setting(PREFIX + '.enabled_tags', '[]')() || '[]');
-    } catch (e) {
-      selected = [];
-    }
-
-    return selected.map(String);
+    return this.buildSettingComponent({
+      type: 'flarum-tags.select-tags',
+      setting: PREFIX + '.enabled_tags',
+      label: app.translator.trans(PREFIX + '.admin.enabled_tags_label'),
+      help: app.translator.trans(PREFIX + '.admin.enabled_tags_help'),
+    });
   }
 
   _validateTemplates() {
