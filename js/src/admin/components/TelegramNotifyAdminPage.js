@@ -55,7 +55,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
   oninit(vnode) {
     super.oninit(vnode);
 
-    this.setting(PREFIX + '.use_topic_id', '');
+    this.setting(PREFIX + '.use_topic', '');
     this.testing = false;
   }
 
@@ -252,7 +252,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
   }
 
   _useTopic() {
-    return this.setting(PREFIX + '.use_topic_id', '')() === '1';
+    return this.setting(PREFIX + '.use_topic', '')() === '1';
   }
 
   _sendTest() {
@@ -288,7 +288,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
   }
 
   _toggleTopic(value) {
-    this.setting(PREFIX + '.use_topic_id')(value ? '1' : '');
+    this.setting(PREFIX + '.use_topic')(value ? '1' : '');
 
     m.redraw();
   }
@@ -341,14 +341,14 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
       selected.splice(index, 1);
     }
 
-    this.setting(PREFIX + '.enabled-tags')(JSON.stringify(selected));
+    this.setting(PREFIX + '.enabled_tags')(JSON.stringify(selected));
     m.redraw();
   }
 
   _selectedTagIds() {
     let selected = [];
     try {
-      selected = JSON.parse(this.setting(PREFIX + '.enabled-tags', '[]')() || '[]');
+      selected = JSON.parse(this.setting(PREFIX + '.enabled_tags', '[]')() || '[]');
     } catch (e) {
       selected = [];
     }

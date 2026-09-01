@@ -58,7 +58,7 @@ class NewPostListener
     private function shouldNotify($discussion): bool
     {
         $enabledTagIds = json_decode(
-            (string) $this->settings->get('stezkoy-telegram-notify.enabled-tags', '[]'),
+            (string) $this->settings->get('stezkoy-telegram-notify.enabled_tags', '[]'),
             true
         );
 

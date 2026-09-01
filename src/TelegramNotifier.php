@@ -43,7 +43,7 @@ class TelegramNotifier
         $chatId = (string) $this->settings->get('stezkoy-telegram-notify.chat_id');
 
         $topicId = null;
-        if (in_array($this->settings->get('stezkoy-telegram-notify.use_topic_id'), [true, '1', 1], true)) {
+        if (in_array($this->settings->get('stezkoy-telegram-notify.use_topic'), [true, '1', 1], true)) {
             $rawTopicId = $this->settings->get('stezkoy-telegram-notify.topic_id');
             $topicId = ($rawTopicId !== null && $rawTopicId !== '') ? (int) $rawTopicId : null;
         }
