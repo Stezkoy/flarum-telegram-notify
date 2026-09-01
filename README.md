@@ -19,6 +19,7 @@ Sends Telegram notifications about new discussions and replies on your Flarum fo
 - Telegram HTML formatting and emoji
 - Topics in forum-style groups (optional)
 - Proxy support
+- Tag-based filtering: notify only about discussions in selected tags (optional, requires [flarum/tags](https://github.com/flarum/tags))
 
 ## Installation
 
@@ -35,6 +36,22 @@ php flarum cache:clear
 ## Setup
 
 Create a bot via [@BotFather](https://t.me/BotFather), add it as admin to your group/channel, then open **Admin → Extensions → Telegram Notify** and configure the connection and message templates.
+
+### Tag filtering
+
+With the [flarum/tags](https://github.com/flarum/tags) extension installed and enabled, a **Tags** section appears in the extension settings. Select the tags to limit notifications to discussions in those tags only. Leave the selection empty to notify about everything.
+
+The tags extension is optional: without it, all discussions and replies are notified about.
+
+## Updating
+
+Migrations are applied automatically when the extension is first enabled. When updating an already enabled extension, run the migrations manually:
+
+```bash
+composer update stezkoy/flarum-telegram-notify
+php flarum migrate
+php flarum cache:clear
+```
 
 ### Recipes
 
