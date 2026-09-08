@@ -33,7 +33,7 @@
         ],
         "icon": {
           "name": "fab fa-telegram",
-          "backgroundColor": "#26A5E4",
+          "backgroundColor": "#00a185",
           "color": "#fff"
         }
       }
