@@ -29,6 +29,8 @@ return [
         ->default('stezkoy-telegram-notify.enabled_tags', '[]')
         ->default('stezkoy-telegram-notify.retry_attempts', '2')
         ->default('stezkoy-telegram-notify.retry_delay', '1')
+        ->default('stezkoy-telegram-notify.connect_timeout', '5')
+        ->default('stezkoy-telegram-notify.timeout', '10')
         ->serializeToForum('stezkoy-telegram-notify.default_new_discussion_template', 'stezkoy-telegram-notify.new_discussion_template')
         ->serializeToForum('stezkoy-telegram-notify.default_new_post_template', 'stezkoy-telegram-notify.new_post_template'),
 

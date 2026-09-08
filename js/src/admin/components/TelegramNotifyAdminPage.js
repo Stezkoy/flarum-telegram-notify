@@ -151,6 +151,18 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
         max: 30,
         placeholder: '1',
       }),
+      this._textField(PREFIX + '.connect_timeout', 'admin.connect_timeout_label', 'admin.connect_timeout_help', {
+        type: 'number',
+        min: 1,
+        max: 30,
+        placeholder: '5',
+      }),
+      this._textField(PREFIX + '.timeout', 'admin.timeout_label', 'admin.timeout_help', {
+        type: 'number',
+        min: 1,
+        max: 60,
+        placeholder: '10',
+      }),
     ]);
   }
 

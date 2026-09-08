@@ -17,6 +17,10 @@ class TelegramNotifier
 
     private const DEFAULT_RETRY_DELAY = 1;
 
+    private const DEFAULT_CONNECT_TIMEOUT = 5;
+
+    private const DEFAULT_TIMEOUT = 10;
+
     public function __construct(
         private readonly SettingsRepositoryInterface $settings,
         private readonly Queue $queue,
@@ -128,11 +132,13 @@ class TelegramNotifier
 
         $attempts = $this->intSetting('retry_attempts', self::DEFAULT_ATTEMPTS, 1, 5);
         $retryDelay = $this->intSetting('retry_delay', self::DEFAULT_RETRY_DELAY, 0, 30);
+        $connectTimeout = $this->intSetting('connect_timeout', self::DEFAULT_CONNECT_TIMEOUT, 1, 30);
+        $timeout = $this->intSetting('timeout', self::DEFAULT_TIMEOUT, 1, 60);
 
         $options = [
             'json' => $data,
-            'connect_timeout' => 5,
-            'timeout' => 10,
+            'connect_timeout' => $connectTimeout,
+            'timeout' => $timeout,
             'http_errors' => false,
         ];
         if ($proxy !== null) {
