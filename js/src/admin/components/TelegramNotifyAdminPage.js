@@ -56,6 +56,7 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
     super.oninit(vnode);
 
     this.setting(PREFIX + '.use_topic', '');
+    this.setting(PREFIX + '.use_proxy', '');
     this.testing = false;
 
     this.defaultDiscussionTemplate = app.forum.attribute(DEFAULT_ATTR_DISCUSSION);
@@ -77,85 +78,49 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
   }
 
   content(vnode) {
-    return m(
-      '.ExtensionPage-settings',
-      m(
-        '.container',
-        m(
-          'form.TelegramNotifyAdmin',
-          [this._connectionSection(), this._templatesSection(), this._hintsSection()]
-        )
-      )
-    );
+    return m('.ExtensionPage-settings', m('.container', [
+      m('.TelegramNotifySettings', [
+        this._connectionSection(),
+        this._deliverySection(),
+        this._tagsSection(),
+        this._templatesSection(),
+        this._hintsSection(),
+        m('.Form-group.Form-controls', this.submitButton()),
+      ]),
+    ]));
+  }
+
+  _section(titleKey, children) {
+    return m('.TelegramNotifySettings-section', [
+      m('h3', app.translator.trans(PREFIX + '.' + titleKey)),
+      m('.TelegramNotifySettings-sectionBody', children),
+    ]);
   }
 
   _connectionSection() {
-    return m('section.TelegramNotifyAdmin-section', [
-      m('h2', app.translator.trans(PREFIX + '.admin.connection_heading')),
+    return this._section('admin.connection_heading', [
       m('p.helpText', app.translator.trans(PREFIX + '.admin.connection_intro')),
-
-      this.buildSettingComponent({
+      this._textField(PREFIX + '.bot_token', 'admin.bot_token_label', 'admin.bot_token_help', {
         type: 'password',
-        setting: PREFIX + '.bot_token',
         placeholder: '1234567890:AAF3cBd4Ee5Ff6Gg7Hh8Ii9Jj0Kk1Ll',
-        label: app.translator.trans(PREFIX + '.admin.bot_token_label'),
-        help: app.translator.trans(PREFIX + '.admin.bot_token_help'),
       }),
-
-      this.buildSettingComponent({
-        type: 'text',
-        setting: PREFIX + '.chat_id',
+      this._textField(PREFIX + '.chat_id', 'admin.chat_id_label', 'admin.chat_id_help', {
         placeholder: '-1001234567890',
-        label: app.translator.trans(PREFIX + '.admin.chat_id_label'),
-        help: app.translator.trans(PREFIX + '.admin.chat_id_help'),
       }),
-
-      m('.Form-group', [
-        m(
-          Switch,
-          {
-            state: this._useTopic(),
-            onchange: this._toggleTopic.bind(this),
-          },
-          app.translator.trans(PREFIX + '.admin.use_topic_switch')
-        ),
-        m('p.helpText', app.translator.trans(PREFIX + '.admin.use_topic_help')),
-      ]),
-
-      this._useTopic()
-        ? this.buildSettingComponent({
+      this._toggle(PREFIX + '.use_topic', 'admin.use_topic_switch', 'admin.use_topic_help'),
+      this._flagOn(PREFIX + '.use_topic')
+        ? this._textField(PREFIX + '.topic_id', 'admin.topic_id_label', 'admin.topic_id_help', {
             type: 'number',
-            setting: PREFIX + '.topic_id',
+            min: 1,
             placeholder: '123',
-            label: app.translator.trans(PREFIX + '.admin.topic_id_label'),
-            help: app.translator.trans(PREFIX + '.admin.topic_id_help'),
           })
         : null,
-
-      m('.Form-group', [
-        m(
-          Switch,
-          {
-            state: this._useProxy(),
-            onchange: this._toggleProxy.bind(this),
-          },
-          app.translator.trans(PREFIX + '.admin.use_proxy_switch')
-        ),
-        m('p.helpText', app.translator.trans(PREFIX + '.admin.use_proxy_help')),
-      ]),
-
-      this._useProxy()
-        ? this.buildSettingComponent({
-            type: 'text',
-            setting: PREFIX + '.proxy',
+      this._toggle(PREFIX + '.use_proxy', 'admin.use_proxy_switch', 'admin.use_proxy_help'),
+      this._flagOn(PREFIX + '.use_proxy')
+        ? this._textField(PREFIX + '.proxy', 'admin.proxy_label', 'admin.proxy_help', {
             placeholder: 'socks5://127.0.0.1:1080',
-            label: app.translator.trans(PREFIX + '.admin.proxy_label'),
-            help: app.translator.trans(PREFIX + '.admin.proxy_help'),
           })
         : null,
-
-      this._tagsGroup(),
-
       m('.Form-group.Form-controls', [
         m(
           Button,
@@ -168,94 +133,148 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
           app.translator.trans(PREFIX + '.admin.test_button')
         ),
       ]),
+    ]);
+  }
 
-      m('.Form-group.Form-controls', this.submitButton()),
+  _deliverySection() {
+    return this._section('admin.delivery_heading', [
+      m('p.helpText', app.translator.trans(PREFIX + '.admin.delivery_intro')),
+      this._textField(PREFIX + '.retry_attempts', 'admin.retry_attempts_label', 'admin.retry_attempts_help', {
+        type: 'number',
+        min: 1,
+        max: 5,
+        placeholder: '2',
+      }),
+      this._textField(PREFIX + '.retry_delay', 'admin.retry_delay_label', 'admin.retry_delay_help', {
+        type: 'number',
+        min: 0,
+        max: 30,
+        placeholder: '1',
+      }),
+    ]);
+  }
+
+  _tagsSection() {
+    if (!app.data.extensions['flarum-tags']) {
+      return this._section('admin.tags_heading', [
+        m('p.helpText', app.translator.trans(PREFIX + '.admin.enabled_tags_empty')),
+      ]);
+    }
+
+    return this._section('admin.tags_heading', [
+      this.buildSettingComponent({
+        type: 'flarum-tags.select-tags',
+        setting: PREFIX + '.enabled_tags',
+        help: app.translator.trans(PREFIX + '.admin.enabled_tags_help'),
+      }),
     ]);
   }
 
   _templatesSection() {
-    return m('section.TelegramNotifyAdmin-section', [
-      m('h2', app.translator.trans(PREFIX + '.admin.templates_heading')),
+    return this._section('admin.templates_heading', [
       m('p.helpText', app.translator.trans(PREFIX + '.admin.templates_intro')),
-
-      this.buildSettingComponent({
-        type: 'textarea',
-        setting: PREFIX + '.new_discussion_template',
-        rows: 7,
-        placeholder: this.defaultDiscussionTemplate,
-        label: app.translator.trans(PREFIX + '.admin.new_discussion_label'),
-      }),
-
-      this.buildSettingComponent({
-        type: 'textarea',
-        setting: PREFIX + '.new_post_template',
-        rows: 7,
-        placeholder: this.defaultPostTemplate,
-        label: app.translator.trans(PREFIX + '.admin.new_post_label'),
-      }),
-
-      m('.Form-group.Form-controls', this.submitButton()),
+      m('.Form-group', [
+        m('label', app.translator.trans(PREFIX + '.admin.new_discussion_label')),
+        m('textarea.FormControl', {
+          rows: 7,
+          bidi: this.setting(PREFIX + '.new_discussion_template'),
+          placeholder: this.defaultDiscussionTemplate,
+        }),
+      ]),
+      m('.Form-group', [
+        m('label', app.translator.trans(PREFIX + '.admin.new_post_label')),
+        m('textarea.FormControl', {
+          rows: 7,
+          bidi: this.setting(PREFIX + '.new_post_template'),
+          placeholder: this.defaultPostTemplate,
+        }),
+      ]),
     ]);
   }
 
   _hintsSection() {
-    return m('section.TelegramNotifyAdmin-section', [
-      m('h2', app.translator.trans(PREFIX + '.admin.hints_heading')),
+    return this._section('admin.hints_heading', [
       this._hintsBox(),
     ]);
   }
 
   _hintsBox() {
     return m(
-      'details.TelegramNotifyAdmin-hints',
+      'details.TelegramNotifySettings-hints',
       [
         m('summary', app.translator.trans(PREFIX + '.admin.hints_summary')),
         m('h4', app.translator.trans(PREFIX + '.admin.placeholders_heading')),
-      m(
-        'ul',
-        PLACEHOLDERS.map(([code, key]) =>
-          m('li', [
-            m('code', code),
-            ' — ',
-            app.translator.trans(PREFIX + '.admin.' + key),
-          ])
-        )
-      ),
-      m('h4', app.translator.trans(PREFIX + '.admin.html_hint')),
-      m(
-        'ul',
-        HTML_TAGS.map(([tag, key]) =>
-          m('li', [
-            m('code', tag),
-            ' — ',
-            app.translator.trans(PREFIX + '.admin.' + key),
-          ])
-        )
-      ),
-      m('h4', app.translator.trans(PREFIX + '.admin.examples_heading')),
-      m(
-        'ul.TelegramNotifyAdmin-examples',
-        [
-          ...EXAMPLES,
+        m(
+          'ul',
+          PLACEHOLDERS.map(([code, key]) =>
+            m('li', [
+              m('code', code),
+              ' — ',
+              app.translator.trans(PREFIX + '.admin.' + key),
+            ])
+          )
+        ),
+        m('h4', app.translator.trans(PREFIX + '.admin.html_hint')),
+        m(
+          'ul',
+          HTML_TAGS.map(([tag, key]) =>
+            m('li', [
+              m('code', tag),
+              ' — ',
+              app.translator.trans(PREFIX + '.admin.' + key),
+            ])
+          )
+        ),
+        m('h4', app.translator.trans(PREFIX + '.admin.examples_heading')),
+        m(
+          'ul.TelegramNotifySettings-examples',
           [
-            'ex_button',
-            `💬 <b>{title}</b>\n👤 {author}\n{excerpt}\n\n👉 <a href="{url}">${extractText(
-              app.translator.trans(PREFIX + '.admin.ex_link_word')
-            )}</a>`,
-          ],
-        ].map(([key, code]) =>
-          m('li', [
-            m('pre', code),
-            m('.TelegramNotifyAdmin-exampleNote', app.translator.trans(PREFIX + '.admin.' + key)),
-          ])
-        )
-      ),
+            ...EXAMPLES,
+            [
+              'ex_button',
+              `💬 <b>{title}</b>\n👤 {author}\n{excerpt}\n\n👉 <a href="{url}">${extractText(
+                app.translator.trans(PREFIX + '.admin.ex_link_word')
+              )}</a>`,
+            ],
+          ].map(([key, code]) =>
+            m('li', [
+              m('pre', code),
+              m('.TelegramNotifySettings-exampleNote', app.translator.trans(PREFIX + '.admin.' + key)),
+            ])
+          )
+        ),
       ]
     );
   }
 
-  _useTopic() {
-    return this.setting(PREFIX + '.use_topic', '')() === '1';
+  _textField(key, labelKey, helpKey, attrs = {}) {
+    return m('.Form-group', [
+      m('label', app.translator.trans(PREFIX + '.' + labelKey)),
+      m('input.FormControl', { type: 'text', ...attrs, bidi: this.setting(key) }),
+      m('p.helpText', app.translator.trans(PREFIX + '.' + helpKey)),
+    ]);
+  }
+
+  _toggle(key, labelKey, descKey) {
+    return m('.Form-group', [
+      m(
+        Switch,
+        {
+          state: this._flagOn(key),
+          onchange: (value) => {
+            this.setting(key)(value ? '1' : '');
+            m.redraw();
+          },
+        },
+        app.translator.trans(PREFIX + '.' + labelKey)
+      ),
+      m('p.helpText', app.translator.trans(PREFIX + '.' + descKey)),
+    ]);
+  }
+
+  _flagOn(key) {
+    const value = this.setting(key, '')();
+    return value === '1' || value === true || value === 1;
   }
 
   _sendTest() {
@@ -288,38 +307,6 @@ export default class TelegramNotifyAdminPage extends ExtensionPage {
           m.redraw();
         }
       );
-  }
-
-  _toggleTopic(value) {
-    this.setting(PREFIX + '.use_topic')(value ? '1' : '');
-
-    m.redraw();
-  }
-
-  _useProxy() {
-    return this.setting(PREFIX + '.use_proxy', '')() === '1';
-  }
-
-  _toggleProxy(value) {
-    this.setting(PREFIX + '.use_proxy')(value ? '1' : '');
-
-    m.redraw();
-  }
-
-  _tagsGroup() {
-    if (!app.data.extensions['flarum-tags']) {
-      return m('.Form-group', [
-        m('label', app.translator.trans(PREFIX + '.admin.enabled_tags_label')),
-        m('p.helpText', app.translator.trans(PREFIX + '.admin.enabled_tags_empty')),
-      ]);
-    }
-
-    return this.buildSettingComponent({
-      type: 'flarum-tags.select-tags',
-      setting: PREFIX + '.enabled_tags',
-      label: app.translator.trans(PREFIX + '.admin.enabled_tags_label'),
-      help: app.translator.trans(PREFIX + '.admin.enabled_tags_help'),
-    });
   }
 
   _validateTemplates() {

@@ -14,7 +14,13 @@ stezkoy-telegram-notify:
     use_topic_help: Включите для Telegram-групп с форумами, где сообщения распределены по топикам.
     topic_id_label: ID топика
     topic_id_help: Числовой идентификатор топика (message_thread_id) в группе.
-    enabled_tags_label: Теги
+    delivery_heading: Доставка
+    delivery_intro: Что происходит, когда запрос к Telegram API не удался.
+    retry_attempts_label: Попыток отправки
+    retry_attempts_help: Общее число попыток отправки, включая первую. 1-5, по умолчанию 2.
+    retry_delay_label: Пауза между попытками, сек
+    retry_delay_help: Задержка перед повторной попыткой. 0-30, по умолчанию 1. Действует и для тестовой кнопки.
+    tags_heading: Теги
     enabled_tags_help: Уведомлять только о темах и ответах в выбранных тегах. Оставьте пустым, чтобы уведомлять обо всём.
     enabled_tags_empty: Расширение flarum-tags должно быть включено, чтобы выбирать теги.
     templates_heading: Шаблоны сообщений

@@ -13,7 +13,9 @@ class TelegramNotifier
 {
     private const API_BASE_URL = 'https://api.telegram.org/bot';
 
-    private const MAX_ATTEMPTS = 2;
+    private const DEFAULT_ATTEMPTS = 2;
+
+    private const DEFAULT_RETRY_DELAY = 1;
 
     public function __construct(
         private readonly SettingsRepositoryInterface $settings,
@@ -124,6 +126,9 @@ class TelegramNotifier
             $proxy = $raw !== '' ? $raw : null;
         }
 
+        $attempts = $this->intSetting('retry_attempts', self::DEFAULT_ATTEMPTS, 1, 5);
+        $retryDelay = $this->intSetting('retry_delay', self::DEFAULT_RETRY_DELAY, 0, 30);
+
         $options = [
             'json' => $data,
             'connect_timeout' => 5,
@@ -136,7 +141,7 @@ class TelegramNotifier
 
         $lastError = null;
 
-        for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; $attempt++) {
+        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
             try {
                 $response = $this->http()->post($url, $options);
 
@@ -150,9 +155,24 @@ class TelegramNotifier
             } catch (GuzzleException $e) {
                 $lastError = $this->sanitize($e->getMessage(), $url);
             }
+
+            if ($attempt < $attempts && $retryDelay > 0) {
+                sleep($retryDelay);
+            }
         }
 
         return ['response' => null, 'error' => $lastError];
+    }
+
+    private function intSetting(string $key, int $default, int $min, int $max): int
+    {
+        $raw = $this->settings->get('stezkoy-telegram-notify.' . $key);
+
+        if (!is_numeric($raw)) {
+            return $default;
+        }
+
+        return max($min, min($max, (int) $raw));
     }
 
     /**
